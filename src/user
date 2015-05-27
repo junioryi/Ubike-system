@@ -1,0 +1,51 @@
+
+public class user {
+	private int userID;
+	private int value=50;
+	private long renttime;
+	private station rentstation;
+	private long returntime;
+	public boolean isused=false;
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public long getRenttime() {
+		return renttime;
+	}
+
+	public void setRenttime(long renttime) {
+		this.renttime = renttime;
+	}
+
+	public long getReturntime() {
+		return returntime;
+	}
+
+	public void setReturntime(long returntime) {
+		this.returntime = returntime;
+	}
+
+	public station getRentstation() {
+		return rentstation;
+	}
+
+	public void setRentstation(station rentstation) {
+		this.rentstation = rentstation;
+	}
+
+
+}
