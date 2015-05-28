@@ -7,11 +7,11 @@ public class User {
 	private long returntime;
 	public boolean isused=false;
 
-    public User(long userID)
-    {
-        this.userID = userID;
-        this.value = 50;
-    }
+	public User(long userID)
+	{
+		this.userID = userID;
+		this.value = 50;
+	}
 
 	public long getUserID() {
 		return userID;
