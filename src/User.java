@@ -1,13 +1,19 @@
 
-public class user {
-	private int userID;
-	private int value=50;
+public class User {
+	private long userID;
+	private int value = 50;
 	private long renttime;
-	private station rentstation;
+	private Station rentstation;
 	private long returntime;
 	public boolean isused=false;
 
-	public int getUserID() {
+    public User(long userID)
+    {
+        this.userID = userID;
+        this.value = 50;
+    }
+
+	public long getUserID() {
 		return userID;
 	}
 
@@ -39,11 +45,11 @@ public class user {
 		this.returntime = returntime;
 	}
 
-	public station getRentstation() {
+	public Station getRentstation() {
 		return rentstation;
 	}
 
-	public void setRentstation(station rentstation) {
+	public void setRentstation(Station rentstation) {
 		this.rentstation = rentstation;
 	}
 

@@ -18,6 +18,8 @@ public class ReadID
 
             //print the first element of each line of csv file.
             //readCSVFirst(finCSV);
+            
+            readID(finID);
         }
         catch (FileNotFoundException e)
         {

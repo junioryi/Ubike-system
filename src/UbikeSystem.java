@@ -1,7 +1,60 @@
+import java.io.*;
+import java.util.ArrayList;
 
-public class system {
+public class UbikeSystem {
+
+    public static void main(String[] args){
+        System.out.println("\nInput users... ");
+        ArrayList<User> userList = new ArrayList<User>();
+        try {
+            File finID = new File ("RFIDCard.txt");
+            userList = inputUser(finID);
+            System.out.println("Users input completed.\n");
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("ID file not found.");
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            System.out.println("IOException");
+            e.printStackTrace();
+        }
+        
+        //System.out.println(userList.get(0));
+
+        System.out.println("Input stations...");
+        // TODO: Need to implement read csv file
+        
+
+        System.out.println("\nChoose action: ");
+        System.out.println("1. Rent bike");
+        System.out.println("2. Return bike");
+        System.out.println("3. User add money");
+        System.out.println("4. Find nearest station");
+        System.out.println("5. List station by bikes numbers");
+        // TODO: Parse the input and execute user's choice.
+
+    }
+
+    public static ArrayList<User> inputUser(File userFin) throws IOException
+    {
+        BufferedReader br = new BufferedReader (new FileReader(userFin));
+        ArrayList userList = new ArrayList<User>();
+        String line = null;
+        while ((line = br.readLine()) != null)
+        {
+            String[] splitedLine = line.split("-");
+            long id = Long.parseLong(splitedLine[0], 16);
+            User user = new User(id);
+            userList.add(user);
+        }
+        br.close();
+        return userList;
+    }
 	
-	public static void getStationInfo(station station,int n){
+	public static void getStationInfo(Station station,int n){
 		System.out.println("站點名稱");
 		System.out.println("可借車輛數");
 		System.out.println("空位數");
@@ -10,7 +63,7 @@ public class system {
 	}
 	
 	
-	public static void getUserInfo(user user){
+	public static void getUserInfo(User user){
 		System.out.printf("餘額:%d\n",user.getValue());
 		if(user.isused){
 			System.out.println("借車中");
@@ -19,7 +72,7 @@ public class system {
 		}
 	}
 	
-	public static void rentbike(user user,station station){
+	public static void rentbike(User user,Station station){
 		if (false){	//UserId沒註冊
 			System.out.println("沒註冊");
 		}else if(user.getValue()<5){
@@ -38,7 +91,7 @@ public class system {
 		
 	}
 	
-	public static void returnbike(user user,station Station){
+	public static void returnbike(User user,Station station){
 		if(false){//沒有空位
 			System.out.println("沒有空位");
 		}else{
@@ -73,13 +126,13 @@ public class system {
 	}	
 	
 	//算出最近的站點
-	public static station findNearest(station Station){
+	public static Station findNearest(Station station){
 		
 		return null;
 	}
 
 	//輸入使用者座標位置列出最近站點依序排列
-	public static station findNearest(double x,double y){
+	public static Station findNearest(double x,double y){
 		
 		return null;
 	}	
@@ -110,9 +163,6 @@ public class system {
 		
 	}
 	
-	public static void main(String[] args) {
-
-	}
 
 
 }
