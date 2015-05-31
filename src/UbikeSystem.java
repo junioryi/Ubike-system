@@ -4,6 +4,8 @@ import java.util.ArrayList;
 public class UbikeSystem {
 
 	public static void main(String[] args){
+		ArrayList<Rental> rentalList = new ArrayList<Rental>();
+
 		System.out.println("\nInput users... ");
 		ArrayList<User> userList = new ArrayList<User>();
 		try {
@@ -112,7 +114,7 @@ public class UbikeSystem {
                 }
         }
         
-        public static void rentbike(User user,Station station){
+        public static void rentbike(User user,Station station, ArrayList<Rental> rentalList){
                 if (false){     //UserId沒註冊
                         System.out.println("沒註冊");
                 }else if(user.getValue()<5){
@@ -126,12 +128,13 @@ public class UbikeSystem {
                         user.setRenttime(System.currentTimeMillis());
                         user.isused=true;
                         user.setRentstation(station);
+                        rentalList.add(new Rental(user, station));
                         System.out.println("借成功,站點ID,剩餘車輛,剩餘空位");
                 }
                 
         }
         
-        public static void returnbike(User user,Station station){
+        public static void returnbike(User user,Station station, ArrayList<Rental> rentalList){
                 if(false){//沒有空位
                         System.out.println("沒有空位");
                 }else{
@@ -160,6 +163,7 @@ public class UbikeSystem {
                                 }
                         }
                         user.isused=false;
+                        rentalList.add(new Rental(user, station));
                         System.out.println("還成功,扣款金額,悠遊卡餘額");                       
                 }
         

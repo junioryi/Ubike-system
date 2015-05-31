@@ -1,72 +1,60 @@
 import java.util.*;
-import java.text.*;
-
 
 public class Rental{
-	private String userID;
-	private String stationID;
-	private long charge;
+	private long userID;
+	private int stationID;
 	private Mode mode;
-	private Date rentalTime;
-	private Date returningTime;
+	private Date rentTime;
+	private Date returnTime;
 	
-	public Rental(String userID, String stationID, Mode mode, String time, ArrayList<Rental> history){
-		this.userID = userID;
-		this.stationID = stationID;
-		this.mode = mode;
-		SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		if (mode == Mode.RENT){
-			try{
-				rentalTime = ft.parse(time);
-			}
-			catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-			returningTime = null;
-			charge = 0;
+	public Rental(User user, Station, station){
+		userID = user.getUserID();
+		stationID = stationID.getIndex();
+		if (user.isused == True){
+			mode = Mode.RENT;
+			rentTime = new Date(user.getRenttime());
+			returnTime = null;
 		}
+		// SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		else{
-			try{
-				returningTime = ft.parse(time);
-			}
-			catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-			rentalTime = null;
-			for(int i = history.size()-1 ; i >= 0 ; i--){
-				if (userID == history.get(i).userID){
-					charge = countCharge(history.get(i).rentalTime);
-					break;
-				}
-			}
+			mode = Mode.RETURN;
+			returnTime = new Date(user.getReturntime());
+			rentTime = null;
 		}
 	}
 	
-	public long countCharge(Date lastRentalTime){
-		long minute = ( returningTime.getTime() - lastRentalTime.getTime() ) / (1000*60);
-		if (minute<30)
-			return 5;
-		else if (minute<240)
-			return 5 + (minute-30)/30*10;
-		else if (minute<480)
-			return 75 + (minute-240)/30*20;
-		else 
-			return 235 + (minute-480)/30*40;
-	}
 	public String toString(){
-		return userID + " " + (mode==Mode.RENT?"RENT  ":"RETURN") + " @ "+ stationID +
-				" @ "+ (rentalTime==null?"":rentalTime) + (returningTime==null?"":returningTime) +
-				" -$" + charge;
+		if (mode == Mode.RENT)
+			return userID + " " + "RENT   @ " + stationID + " @ " + rentTime;
+		else
+			return userID + " " + "RETURN @ " + stationID + " @ " + returnTime;
 	}
-	public static void showAllHistory(ArrayList<Rental> history){
-		for(int i = history.size()-1 ; i >= 0 ; i--){
-			System.out.println( history.get(i) );
-		}
+	
+	public long getUserID{
+		return userID;
 	}
-	public static void showUserHistory(String userID, ArrayList<Rental> history){
-		for(int i = history.size()-1 ; i >= 0 ; i--){
-			if ( userID == history.get(i).userID )
-				System.out.println( history.get(i) );
-		}
+	public int getStationID{
+		return stationID;
 	}
+	public Mode getMode{
+		return mode;
+	}
+	public Date getRentTime{
+		return rentTime;
+	}
+	private Date getReturnTime{
+		return returnTime;
+	}
+
+	// public static void showAllHistory(ArrayList<Rental> rentalList){
+	// 	for(int i = rentalList.size()-1 ; i >= 0 ; i--){
+	// 		System.out.println(rentalList.get(i));
+	// 	}
+	// }
+	// public static void showUserHistory(String userID, ArrayList<Rental> rentalList){
+	// 	for(int i = rentalList.size()-1 ; i >= 0 ; i--){
+	// 		if ( userID == rentalList.get(i).userID )
+	// 			System.out.println(rentalList.get(i));
+	// 	}
+	// }
 }
