@@ -43,7 +43,7 @@ public class Rental{
 		return rentTime;
 	}
 	private Date getReturnTime{
-		return returnTime;
+		return returnTime; 
 	}
 
 	// public static void showAllHistory(ArrayList<Rental> rentalList){
