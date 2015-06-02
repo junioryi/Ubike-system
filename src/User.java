@@ -6,6 +6,9 @@ public class User {
 	private Station rentstation;
 	private long returntime;
 	public boolean isused=false;
+	private long time;
+	private int times;
+
 
 	public User(long userID)
 	{
@@ -53,5 +56,20 @@ public class User {
 		this.rentstation = rentstation;
 	}
 
+	public long getTotalTime() {
+		return totalTime;
+	}
+
+	public void setTotalTime(long totalTime) {
+		this.totalTime = totalTime;
+	}
+
+	public int getTimes(){
+		return times;
+	}
+
+	public void setTimes(int times) {
+		this.times = times;
+	}
 
 }
