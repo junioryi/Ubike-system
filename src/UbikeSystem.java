@@ -128,6 +128,7 @@ public class UbikeSystem {
                         user.setRenttime(System.currentTimeMillis());
                         user.isused=true;
                         user.setRentstation(station);
+                        user.setTimes(user.getTimes() + 1);
                         rentalList.add(new Rental(user, station));
                         System.out.println("借成功,站點ID,剩餘車輛,剩餘空位");
                 }
@@ -141,6 +142,7 @@ public class UbikeSystem {
                         //扣款
                         user.setReturntime(System.currentTimeMillis());
                         long deltatime=(System.currentTimeMillis()-user.getRenttime())/1000/60;
+                        user.setTotalTime(user.getTotalTime() + deltatime);
                         if (deltatime<30){//30分鐘內
                                 user.setValue(user.getValue()-5);
                         }else if (deltatime<240){//4小時內
@@ -166,45 +168,110 @@ public class UbikeSystem {
                         rentalList.add(new Rental(user, station));
                         System.out.println("還成功,扣款金額,悠遊卡餘額");                       
                 }
-        
         }       
         
-        //算出最近的站點
-        public static Station findNearest(Station station){
-                
-                return null;
-        }
 
         //輸入使用者座標位置列出最近站點依序排列
-        public static Station findNearest(double x,double y){
-                
-                return null;
+        public static void findNearest(ArrayList<Station> stationList, double x,double y){
+        	ArrayList<Station> rankingList = new ArrayList<Station>(310); 
+			rankingList.add(stationList.get(0));
+			for(int i = 1; i < stationList.size(); i++){
+				for (int j = 0; j < rankingList.size(); j++) { 		      
+			    	if (stationList.get(i).getDistance(x, y) < rankingList.get(j).getDistance(x, y)){
+			    		rankingList.add(stationList.get(i), j);
+			    		break;
+			    	}
+				}
+				rankingList.add(stationList.get(i));
+			}
+			for(int k = 0; k < rankingList.size(); k++){
+				System.out.println(rankingList.get(k).getDistance(x, y) + " " + rankingList.get(k).getName());
+			}
         }       
         
         //列出最多空位數的站點依序排列
-        public static void orderBySpace(){
-                
+        public static void orderBySpace(ArrayList<Station> stationList){
+        	ArrayList<Station> rankingList = new ArrayList<Station>(310); 
+			rankingList.add(stationList.get(0));
+			for(int i = 1; i < stationList.size(); i++){
+				for (int j = 0; j < rankingList.size(); j++) { 		      
+			    	if (stationList.get(i).getCapacity() > rankingList.get(j).getCapacity()){
+			    		rankingList.add(stationList.get(i), j);
+			    		break;
+			    	}
+				}
+				rankingList.add(stationList.get(i));
+			}
+			for(int k = 0; k < rankingList.size(); k++){
+				System.out.println(rankingList.get(k).getCapacity() + " " + rankingList.get(k).getName());
+			}
         }
         
         //列出最多車輛數的站點依序排列
-        public static void orderByBike(){
-                
+        public static void orderByBike(ArrayList<Station> stationList){
+        	ArrayList<Station> rankingList = new ArrayList<Station>(310); 
+			rankingList.add(stationList.get(0));
+			for(int i = 1; i < stationList.size(); i++){
+				for (int j = 0; j < rankingList.size(); j++) { 		      
+			    	if (stationList.get(i).getAvailable() > rankingList.get(j).getAvailable()){
+			    		rankingList.add(stationList.get(i), j);
+			    		break;
+			    	}
+				}
+				rankingList.add(stationList.get(i));
+			}
+			for(int k = 0; k < rankingList.size(); k++){
+				System.out.println(rankingList.get(k).getAvailable() + " " + rankingList.get(k).getName());
+			}
+     
         }
                 
-        public static void getUsedUser(){
-                
+        public static void getUsedUser(ArrayList<User> userList){
+        	for(int i = 0; i < userList.size(); i++){
+        		if(userList.get(i).isused() == true)
+        			System.out.println(userList.get(i).getUserID());
+        	}
         }
         
-        public static void getUnusedUser(){
-                
+        public static void getUnusedUser(ArrayList<User> userList){
+        	for(int i = 0; i < userList.size(); i++){
+        		if(userList.get(i).isused() == false)
+        			System.out.println(userList.get(i).getUserID());
+        	}    
         }
         
-        public static void getTimeTop10User(){
-                
+        public static void getTimeTop10User(ArrayList<User> userList){
+			ArrayList<User> rankingList = new ArrayList<User>(115);
+			rankingList.add(userList.get(0));
+			for(int i = 1; i < userList.size(); i++){
+				for (int j = 0; j < rankingList.size(); j++) { 		      
+			    	if (userList.get(i).getTime() > rankingList.get(j).getTime()){
+			    		rankingList.add(userList.get(i), j);
+			    		break;
+			    	}
+				}
+				rankingList.add(userList.get(i));
+			}
+			for(int k = 0; k < 10; k++){
+				System.out.println(rankingList.get(k).getUserID() + " " + rankingList.get(k).getTime());
+			}
         }
         
-        public static void getTimesTop10User(){
-                
+        public static void getTimesTop10User(ArrayList<User> userList){
+			ArrayList<User> rankingList = new ArrayList<User>(115);
+			rankingList.add(userList.get(0));
+			for(int i = 1; i < userList.size(); i++){
+				for (int j = 0; j < rankingList.size(); j++) { 		      
+			    	if (userList.get(i).getTimes() > rankingList.get(j).getTimes()){
+			    		rankingList.add(userList.get(i), j);
+			    		break;
+			    	}
+				}
+				rankingList.add(userList.get(i));
+			}
+			for(int k = 0; k < 10; k++){
+				System.out.println(rankingList.get(k).getUserID() + " " + rankingList.get(k).getTimes());
+			}
         }
         
 
