@@ -49,7 +49,11 @@ public class Station
         // TODO: show more detail.
         return name;
     }
-    
+    public double getDistance(double x, double y){
+        double x2 = Math.pow(x-locationX, 2);
+        double y2 = Math.pow(y-locationY, 2);
+        return Math.sqrt(x2+y2);
+    }
 
 }
 
