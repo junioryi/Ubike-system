@@ -7,10 +7,10 @@ public class Rental{
 	private Date rentTime;
 	private Date returnTime;
 	
-	public Rental(User user, Station, station){
+	public Rental(User user, Station station){
 		userID = user.getUserID();
-		stationID = stationID.getIndex();
-		if (user.isused == True){
+		stationID = station.getIndex();
+		if (user.isused == true){
 			mode = Mode.RENT;
 			rentTime = new Date(user.getRenttime());
 			returnTime = null;
@@ -30,19 +30,19 @@ public class Rental{
 			return userID + " " + "RETURN @ " + stationID + " @ " + returnTime;
 	}
 	
-	public long getUserID{
+	public long getUserID(){
 		return userID;
 	}
-	public int getStationID{
+	public int getStationID(){
 		return stationID;
 	}
-	public Mode getMode{
+	public Mode getMode(){
 		return mode;
 	}
-	public Date getRentTime{
+	public Date getRentTime(){
 		return rentTime;
 	}
-	private Date getReturnTime{
+	private Date getReturnTime(){
 		return returnTime; 
 	}
 

@@ -7,6 +7,7 @@ public class User {
 	private long returntime;
 	public boolean isused=false;
 	private long time;
+    private long totalTime;
 	private int times;
 
 
