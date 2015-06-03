@@ -59,7 +59,7 @@ public class UbikeSystem {
 	public static ArrayList<User> inputUser(File userFin) throws IOException
 	{
 		BufferedReader br = new BufferedReader (new FileReader(userFin));
-		ArrayList userList = new ArrayList<User>();
+		ArrayList<User> userList = new ArrayList<User>();
 		String line = null;
 		while ((line = br.readLine()) != null)
 		{
@@ -74,7 +74,7 @@ public class UbikeSystem {
 	public static ArrayList<Station> inputStation(File stationFin) throws IOException
 	{
 		BufferedReader br = new BufferedReader (new FileReader(stationFin));
-		ArrayList stationList = new ArrayList<Station>();
+		ArrayList<Station> stationList = new ArrayList<Station>();
 		String line = null;
 		line = br.readLine(); // Skip first line.
 		while ((line = br.readLine()) != null)
@@ -178,7 +178,7 @@ public class UbikeSystem {
 			for(int i = 1; i < stationList.size(); i++){
 				for (int j = 0; j < rankingList.size(); j++) { 		      
 			    	if (stationList.get(i).getDistance(x, y) < rankingList.get(j).getDistance(x, y)){
-			    		rankingList.add(stationList.get(i), j);
+			    		rankingList.add(j, stationList.get(i));
 			    		break;
 			    	}
 				}
@@ -196,7 +196,7 @@ public class UbikeSystem {
 			for(int i = 1; i < stationList.size(); i++){
 				for (int j = 0; j < rankingList.size(); j++) { 		      
 			    	if (stationList.get(i).getCapacity() > rankingList.get(j).getCapacity()){
-			    		rankingList.add(stationList.get(i), j);
+			    		rankingList.add(j, stationList.get(i));
 			    		break;
 			    	}
 				}
@@ -214,7 +214,7 @@ public class UbikeSystem {
 			for(int i = 1; i < stationList.size(); i++){
 				for (int j = 0; j < rankingList.size(); j++) { 		      
 			    	if (stationList.get(i).getAvailable() > rankingList.get(j).getAvailable()){
-			    		rankingList.add(stationList.get(i), j);
+			    		rankingList.add(j, stationList.get(i));
 			    		break;
 			    	}
 				}
@@ -228,14 +228,14 @@ public class UbikeSystem {
                 
         public static void getUsedUser(ArrayList<User> userList){
         	for(int i = 0; i < userList.size(); i++){
-        		if(userList.get(i).isused() == true)
+        		if(userList.get(i).isused == true)
         			System.out.println(userList.get(i).getUserID());
         	}
         }
         
         public static void getUnusedUser(ArrayList<User> userList){
         	for(int i = 0; i < userList.size(); i++){
-        		if(userList.get(i).isused() == false)
+        		if(userList.get(i).isused == false)
         			System.out.println(userList.get(i).getUserID());
         	}    
         }
@@ -245,15 +245,15 @@ public class UbikeSystem {
 			rankingList.add(userList.get(0));
 			for(int i = 1; i < userList.size(); i++){
 				for (int j = 0; j < rankingList.size(); j++) { 		      
-			    	if (userList.get(i).getTime() > rankingList.get(j).getTime()){
-			    		rankingList.add(userList.get(i), j);
+			    	if (userList.get(i).getTotalTime() > rankingList.get(j).getTotalTime()){
+			    		rankingList.add(j, userList.get(i));
 			    		break;
 			    	}
 				}
 				rankingList.add(userList.get(i));
 			}
 			for(int k = 0; k < 10; k++){
-				System.out.println(rankingList.get(k).getUserID() + " " + rankingList.get(k).getTime());
+				System.out.println(rankingList.get(k).getUserID() + " " + rankingList.get(k).getTotalTime());
 			}
         }
         
@@ -263,7 +263,7 @@ public class UbikeSystem {
 			for(int i = 1; i < userList.size(); i++){
 				for (int j = 0; j < rankingList.size(); j++) { 		      
 			    	if (userList.get(i).getTimes() > rankingList.get(j).getTimes()){
-			    		rankingList.add(userList.get(i), j);
+			    		rankingList.add(j, userList.get(i));
 			    		break;
 			    	}
 				}
