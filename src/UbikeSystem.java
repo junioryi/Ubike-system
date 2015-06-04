@@ -1,7 +1,28 @@
 import java.io.*;
 import java.util.ArrayList;
 
-public class UbikeSystem {
+import javax.swing.*;
+
+import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.Graphics;
+
+public class UbikeSystem extends JPanel implements ActionListener
+{
+        private GUIResource gui;
+        private KeyController keyController;
+
+        public UbikeSystem()
+        {
+                gui = new GUIResource(this);
+                setFocusable(true);
+                setLayout(null);
+                //keyController = new KeyController();
+
+
+        }
+
 
 	public static void main(String[] args){
 		ArrayList<Rental> rentalList = new ArrayList<Rental>();
@@ -55,6 +76,28 @@ public class UbikeSystem {
 		// TODO: Parse the input and execute user's choice.
 
 	}
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+                repaint();
+        }
+        @Override
+        public void paintComponent(Graphics g)
+        {
+                super.paintComponent(g);
+                g.drawImage(gui.background, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        }
+        /**
+         * Not in use for now.
+         */
+        private class KeyController extends KeyAdapter
+        {
+                public KeyController()
+                {
+                        super();
+                }
+        }
 
 	public static ArrayList<User> inputUser(File userFin) throws IOException
 	{

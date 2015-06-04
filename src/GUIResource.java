@@ -16,6 +16,19 @@ public class GUIResource
                 background = backImageIcon.getImage();
         }
 
+        public void setStationLocation(int index, int x, int y)
+        {
+                stationResource[index].setLocation(x, y);
+        }
+        public void enableMouseListener(int index)
+        {
+                stationResource[index].enableMouseListener();
+        }
+        public void disableMouseListener(int index)
+        {
+                stationResource[index].disableMouseListener();
+        }
+
         private class StationLabel extends JLabel
         {
                 private MouseController mouseController;
@@ -47,15 +60,5 @@ public class GUIResource
                                 // the station.
                         }
                 }
-        }
-        public static void main(String[] args)
-        {
-                EventQueue.incokeLater(new Runnable() {
-                        public void run()
-                        {
-                                GUIResource gr = new GUIResource();
-                                gr.setVisible(true);
-                        }
-                });
         }
 }
