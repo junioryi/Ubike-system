@@ -120,7 +120,7 @@ public class UbikeSystem {
 				
 				break;
 			case 5:
-				System.out.println("List station by bikes numbers:");
+				System.out.println("List station by bikes numbers");
 				
 				break;
 		}
@@ -212,6 +212,8 @@ public class UbikeSystem {
 			user.isused = true;
 			user.setRentstation(station);
 			user.setTimes(user.getTimes() + 1);
+			station.setCapacity(station.getCapacity()+1);
+			station.setAvailable(station.getAvailable()-1);
 			rentalList.add(new Rental(user, station));
 			System.out.printf("借成功,站點名稱:%s,剩餘車輛:%d,剩餘空位:%d", station.getName(),
 					station.getAvailable(), station.getCapacity());
@@ -252,7 +254,10 @@ public class UbikeSystem {
 				}
 			}
 			user.setValue(user.getValue() - charge);
+			user.setTotalTime(user.getTotalTime()+deltatime);
 			user.isused = false;
+			station.setCapacity(station.getCapacity()-1);
+			station.setAvailable(station.getAvailable()+1);
 			rentalList.add(new Rental(user, station));
 			System.out.printf("還成功,扣款金額:%d,悠遊卡餘額:%d", charge, user.getValue());
 		}
