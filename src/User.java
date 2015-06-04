@@ -1,26 +1,31 @@
 
 public class User {
 	private long userID;
+	private String strID;
 	private int value = 50;
 	private long renttime;
 	private Station rentstation;
 	private long returntime;
 	public boolean isused=false;
-	private long time;
-    private long totalTime;
+    	private long totalTime;	//unit:min
 	private int times;
 
 
-	public User(long userID)
+	public User(long userID,String strID)
 	{
 		this.userID = userID;
+		this.strID=strID;
 		this.value = 50;
 	}
 
 	public long getUserID() {
 		return userID;
 	}
-
+	
+	public String getStrID() {
+		return strID;
+	}
+	
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
@@ -73,4 +78,6 @@ public class User {
 		this.times = times;
 	}
 
+
+	
 }

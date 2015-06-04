@@ -43,6 +43,14 @@ public class Station
     {
         return address;
     }   
+    public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setAvailable(int available) {
+		this.available = available;
+	}
+
     public String toString()
     {
         String s = new String();
