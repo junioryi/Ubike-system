@@ -7,7 +7,7 @@ public class User {
 	private Station rentstation;
 	private long returntime;
 	public boolean isused=false;
-    private long totalTime;
+    	private long totalTime;	//unit:min
 	private int times;
 
 
