@@ -1,8 +1,11 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class UbikeSystem {
+
+	private static Scanner scanner;
 
 	public static void main(String[] args) {
 		ArrayList<Rental> rentalList = new ArrayList<Rental>();
@@ -37,13 +40,90 @@ public class UbikeSystem {
 			e.printStackTrace();
 		}
 
-		 System.out.println("\nChoose an action: ");
-		 System.out.println("1. Rent bike");
-		 System.out.println("2. Return bike");
-		 System.out.println("3. User add money");
-		 System.out.println("4. Find nearest station");
-		 System.out.println("5. List station by bikes numbers\n");
-		// TODO: Parse the input and execute user's choice.
+		System.out.println("\nChoose an action: ");
+		System.out.println("1. Rent bike");
+		System.out.println("2. Return bike");
+		System.out.println("3. User add money");
+		System.out.println("4. Find nearest station");
+		System.out.println("5. List station by bikes numbers\n");
+		scanner = new Scanner(System.in);
+		int action = scanner.nextInt();
+		
+		String strID,name;
+		long id;
+		String[] splitedLine;
+		
+		Station station = null;
+		Iterator<Station> s_itr = stationList.iterator();
+		User user = null;
+		Iterator<User> u_itr = userList.iterator();
+		
+		switch(action){
+			case 1:
+				System.out.println("Rent bike: Please enter user ID and station name.");
+				strID=scanner.next();
+				splitedLine = strID.split("-");
+				id = Long.parseLong(splitedLine[0], 16);
+				name=scanner.next();
+				while (s_itr.hasNext()) {
+					Station s = s_itr.next();
+					if (s.getName() == name) {
+						station=s;
+						break;
+					}
+				}				
+				rentbike(id, station,userList,rentalList);
+				
+				break;
+			case 2:
+				System.out.println("Return bike: Please enter user ID and station name.");
+				strID=scanner.next();
+				splitedLine = strID.split("-");
+				id = Long.parseLong(splitedLine[0], 16);
+				name=scanner.next();
+				while (s_itr.hasNext()) {
+					Station s = s_itr.next();
+					if (s.getName() == name) {
+						station=s;
+						break;
+					}
+				}
+				while (u_itr.hasNext()) {
+					User u = u_itr.next();
+					if (u.getUserID() == id) {
+						user=u;
+						break;
+					}
+				}
+				returnbike(user,station,rentalList);
+				break;
+			case 3:
+				System.out.println("User add money: Please enter user ID and charge.");
+				strID=scanner.next();
+				splitedLine = strID.split("-");
+				id = Long.parseLong(splitedLine[0], 16);
+				int charge=scanner.nextInt();
+				while (u_itr.hasNext()) {
+					User u = u_itr.next();
+					if (u.getUserID() == id) {
+						user=u;
+						break;
+					}
+				}
+
+				System.out.printf("Value before charged = %d\n",user.getValue() );	
+				user.setValue(user.getValue()+charge);
+				System.out.printf("Value after charged = %d",user.getValue() );	
+				break;
+			case 4:
+				System.out.println("Find nearest station:");
+				
+				break;
+			case 5:
+				System.out.println("List station by bikes numbers:");
+				
+				break;
+		}
 
 	}
 
@@ -87,11 +167,11 @@ public class UbikeSystem {
 	}
 
 	public static void getStationInfo(Station station) {
-		System.out.printf("站點名稱%s",station.getName());
-		System.out.printf("可借車輛數%d",station.getAvailable());
-		System.out.printf("空位數%d",station.getCapacity());
-		System.out.printf("站點地址%s",station.getAddress());
-		//System.out.printf("與該站點相近的%d個站點名稱 距離 可借車輛 空位數", n);
+		System.out.printf("站點名稱%s", station.getName());
+		System.out.printf("可借車輛數%d", station.getAvailable());
+		System.out.printf("空位數%d", station.getCapacity());
+		System.out.printf("站點地址%s", station.getAddress());
+		// System.out.printf("與該站點相近的%d個站點名稱 距離 可借車輛 空位數", n);
 	}
 
 	public static void getUserInfo(User user) {
@@ -104,11 +184,9 @@ public class UbikeSystem {
 		}
 	}
 
-	public static void rentbike(String strID, Station station,
+	public static void rentbike(long id, Station station,
 			ArrayList<User> userList, ArrayList<Rental> rentalList) {
 		User user = null;
-		String[] splitedLine = strID.split("-");
-		long id = Long.parseLong(splitedLine[0], 16);
 		Iterator<User> itr = userList.iterator();
 		boolean notfind = true;
 		while (itr.hasNext()) {
@@ -135,14 +213,16 @@ public class UbikeSystem {
 			user.setRentstation(station);
 			user.setTimes(user.getTimes() + 1);
 			rentalList.add(new Rental(user, station));
-			System.out.printf("借成功,站點名稱:%s,剩餘車輛:%d,剩餘空位:%d",station.getName(),station.getAvailable(),station.getCapacity());
+			System.out.printf("借成功,站點名稱:%s,剩餘車輛:%d,剩餘空位:%d", station.getName(),
+					station.getAvailable(), station.getCapacity());
 		}
 
 	}
 
-	public static void returnbike(User user, Station station,ArrayList<Rental> rentalList) {
-			
-		if (station.getCapacity()==0) {
+	public static void returnbike(User user, Station station,
+			ArrayList<Rental> rentalList) {
+
+		if (station.getCapacity() == 0) {
 			System.out.println("沒有空位");
 		} else {
 			// 扣款
@@ -151,30 +231,30 @@ public class UbikeSystem {
 			long deltatime = (System.currentTimeMillis() - user.getRenttime()) / 1000 / 60;
 			user.setTotalTime(user.getTotalTime() + deltatime);
 			if (deltatime < 30) {// 30分鐘內
-				charge=5;
+				charge = 5;
 			} else if (deltatime < 240) {// 4小時內
 				if (deltatime % 30 == 0) {
-					charge=(int) (10 * deltatime / 30);
+					charge = (int) (10 * deltatime / 30);
 				} else {
-					charge=(int) (10 * deltatime / 30)+1;
+					charge = (int) (10 * deltatime / 30) + 1;
 				}
 			} else if (deltatime < 480) {// 8小時內
 				if (deltatime % 30 == 0) {
-					charge=(int) (20 * deltatime / 30);
+					charge = (int) (20 * deltatime / 30);
 				} else {
-					charge=(int) (20 * deltatime / 30)+1;
+					charge = (int) (20 * deltatime / 30) + 1;
 				}
 			} else {// 逾8小時
 				if (deltatime % 30 == 0) {
-					charge=(int) (40 * deltatime / 30);
+					charge = (int) (40 * deltatime / 30);
 				} else {
-					charge=(int) (40 * deltatime / 30)+1;
+					charge = (int) (40 * deltatime / 30) + 1;
 				}
 			}
 			user.setValue(user.getValue() - charge);
 			user.isused = false;
 			rentalList.add(new Rental(user, station));
-			System.out.printf("還成功,扣款金額:%d,悠遊卡餘額:%d",charge,user.getValue());
+			System.out.printf("還成功,扣款金額:%d,悠遊卡餘額:%d", charge, user.getValue());
 		}
 	}
 
