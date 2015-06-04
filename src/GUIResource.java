@@ -18,6 +18,8 @@ public class GUIResource
 
                 // The background image left down corner is 
                 // 25.015761N, 121.487632E
+                // up-right
+                // 25.112275N, 121.602259E
                 ImageIcon backImageIcon = new ImageIcon(
                                 this.getClass().getResource("images/Taipei.png"));
                 
@@ -27,12 +29,11 @@ public class GUIResource
                 for (int i = 0; i < stationList.size(); ++i)
                 {
                         Station station = (Station)stationList.get(i);
+                        
                         ImageIcon ii = new ImageIcon(
                                         this.getClass().getResource("images/greenDot.png"));
 
                         stationResource[i] = new StationLabel(station, ii, i);
-
-
                 }
         }
 
@@ -61,17 +62,29 @@ public class GUIResource
 
                 public StationLabel(Station station, ImageIcon ii, int index)
                 {
-                        super();
+                        super(ii);
                         mouseController = new MouseController();
                         this.station = station;
                         this.index = index;
-                        this.x = (int)station.getX();
-                        this.y = (int)station.getY();
+                        // Boundary:
+                        // 25.015761N, 121.487632E
+                        // 25.112275N, 121.602259E
+                        double width  = 121.602259 - 121.487632;
+                        double height = 25.112275  - 25.015761;
+                        double widthScale  = Constants.WIDTH/width;
+                        double heightScale = Constants.HEIGHT/height;
+
+                        double modifyX = (station.getX() - 121.602259) * widthScale;
+                        double modifyY = Constants.HEIGHT - ((station.getY() - 25.112275) * heightScale);
+
+                        this.x = (int)modifyX;
+                        this.y = (int)modifyY;
+
                         this.ii = ii;
                         setBounds(x, y, 10, 10);
-                        //setIcon(ii);
+                        setIcon(ii);
                         updateUI();
-                        //System.out.println("x, y: " + x + ", " + y);
+                        System.out.println("x, y: " + x + ", " + y);
                         //this.setBounds(x, y, 10, 10);
 
                 }
@@ -79,7 +92,7 @@ public class GUIResource
                 public void paintComponent(Graphics g)
                 {
                         super.paintComponent(g);
-                        System.out.println("hello");
+                        //System.out.println("hello");
                         g.setColor(Color.yellow);
                         g.drawOval(x, y, 70, 70);
                         g.fillOval(x, y, 70, 70);
