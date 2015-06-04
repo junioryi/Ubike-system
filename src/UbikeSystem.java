@@ -14,25 +14,40 @@ public class UbikeSystem extends JPanel implements ActionListener
 {
         private GUIResource gui;
         private KeyController keyController;
+        private static ArrayList<User> userList;
+	private static ArrayList<Station> stationList;
+	private static Scanner scanner;
 
-        public UbikeSystem()
+        public UbikeSystem() throws IOException
         {
-                gui = new GUIResource(this);
+                File finID = new File("RFIDCard.txt");
+                userList = inputUser(finID);
+
+                File fin = new File("ubike.csv");
+                stationList = inputStation(fin);
+
+                gui = new GUIResource(this, stationList);
                 setFocusable(true);
                 setLayout(null);
                 //keyController = new KeyController();
-
-
+                drawStation();
+                
         }
 
-
-	private static Scanner scanner;
+        void drawStation()
+        {
+                for (int i = 0; i < stationList.size(); ++i)
+                {
+                        add(gui.stationResource[i], 0);
+                }
+        }
 
 	public static void main(String[] args) {
 		ArrayList<Rental> rentalList = new ArrayList<Rental>();
 
 		System.out.println("\nInput users... ");
-		ArrayList<User> userList = new ArrayList<User>();
+		//ArrayList<User> userList = new ArrayList<User>();
+		userList = new ArrayList<User>();
 		try {
 			File finID = new File("RFIDCard.txt");
 			userList = inputUser(finID);
@@ -48,7 +63,8 @@ public class UbikeSystem extends JPanel implements ActionListener
 		// System.out.println(userList.get(0));
 
 		System.out.println("Input stations...");
-		ArrayList<Station> stationList = new ArrayList<>();
+		//ArrayList<Station> stationList = new ArrayList<>();
+		stationList = new ArrayList<>();
 		try {
 			File fin = new File("ubike.csv");
 			stationList = inputStation(fin);
@@ -144,6 +160,11 @@ public class UbikeSystem extends JPanel implements ActionListener
 				System.out.println("List station by bikes numbers");
 				
 				break;
+
+                        default:
+                                System.out.println("Incorrect choice.");
+
+                                break;
 		}
 
 	}

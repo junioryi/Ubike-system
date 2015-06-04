@@ -23,6 +23,14 @@ public class Station
     {
         return idx;
     }
+    public double getX()
+    {
+        return locationX;
+    }
+    public double getY()
+    {
+        return locationY;
+    }
     public String getName()
     {
         return name;

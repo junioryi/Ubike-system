@@ -1,9 +1,10 @@
 import javax.swing.*;
+import java.io.*;
 
 public class MainFrame extends JFrame
 {
         public UbikeSystem ubikeSystem;
-        public MainFrame()
+        public MainFrame() throws IOException
         {
                 ubikeSystem = new UbikeSystem();
                 add(ubikeSystem);
@@ -13,7 +14,7 @@ public class MainFrame extends JFrame
                 setResizable(false);
                 setVisible(true);
         }
-        public static void main(String[] args)
+        public static void main(String[] args) throws IOException
         {
                 MainFrame mainFrame = new MainFrame();
         }
