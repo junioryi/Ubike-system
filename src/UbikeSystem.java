@@ -184,7 +184,7 @@ public class UbikeSystem extends JPanel implements ActionListener
         public void paintComponent(Graphics g)
         {
                 super.paintComponent(g);
-                g.drawImage(gui.background, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+                g.drawImage(gui.background, 0, 0, Constants.CENTER_WIDTH, Constants.HEIGHT, this);
         }
         /**
          * Not in use for now.
