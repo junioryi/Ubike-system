@@ -26,60 +26,73 @@ public class GUIResource
                 background = backImageIcon.getImage();
 
                 stationResource = new StationLabel[ stationList.size() ];
-        for (int i = 0; i < stationList.size(); ++i)
-        {
-                Station station = (Station)stationList.get(i);
-                
-                ImageIcon ii = new ImageIcon(
-                                this.getClass().getResource("images/greenDot.png"));
+                for (int i = 0; i < stationList.size(); ++i)
+                {
+                        Station station = (Station)stationList.get(i);
+                        
+                        ImageIcon ii = new ImageIcon(
+                                        this.getClass().getResource("images/greenDot.png"));
 
-                stationResource[i] = new StationLabel(station, ii, i);
+                        stationResource[i] = new StationLabel(station, ii, i);
+                }
         }
-}
 
-public void setStationLocation(int index, int x, int y)
-{
-        stationResource[index].setLocation(x, y);
-}
-public void enableMouseListener(int index)
-{
-        stationResource[index].enableMouseListener();
-}
-public void disableMouseListener(int index)
-{
-        stationResource[index].disableMouseListener();
-}
 
-private class StationLabel extends JLabel
-{
-        private MouseController mouseController;
-        private int x, y;
-        private int index;
-        private int capacity;
-        private int available;
-        private ImageIcon ii;
-        private Station station;
-
-        public StationLabel(Station station, ImageIcon ii, int index)
+        public void setStationLocation(int index, int x, int y)
         {
-                super(ii);
-                mouseController = new MouseController();
-                this.station = station;
-                this.index = index;
-                // Boundary:
-                // 25.015761N, 121.487632E
-                // 25.112275N, 121.602259E
-                double width  = 121.602259 - 121.487632;
-                double height = 25.112275  - 25.015761;
-                double widthScale  = Constants.CENTER_WIDTH/width;
-                double heightScale = Constants.HEIGHT/height;
+                stationResource[index].setLocation(x, y);
+        }
+        public void enableMouseListener(int index)
+        {
+                stationResource[index].enableMouseListener();
+        }
+        public void disableMouseListener(int index)
+        {
+                stationResource[index].disableMouseListener();
+        }
 
-                double modifyX = (station.getX() - 121.487632) * widthScale;
-                double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
-                //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
+        private class StationLabel extends JLabel
+        {
+                private MouseController mouseController;
+                private int x, y;
+                private int index;
+                private int capacity;
+                private int available;
+                private ImageIcon ii;
+                private Station station;
 
-                this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -1;
-                this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -1;
+                /** 
+                 * Construct label for each station.
+                 * Modify each station's location according to the size
+                 * of the frame and add the mouse listener.
+                 *
+                 * @param station a station which has location info.
+                 * @param ii ImageIcon, to display the status of station,
+                 *              red indicate full, green indicate available
+                 *              Not implemented.
+                 * @param index the index of the station, can be use by 
+                 *              mouse listener.
+                 */
+                public StationLabel(Station station, ImageIcon ii, int index)
+                {
+                        super(ii);
+                        mouseController = new MouseController();
+                        this.station = station;
+                        this.index = index;
+                        // Boundary:
+                        // 25.015761N, 121.487632E
+                        // 25.112275N, 121.602259E
+                        double width  = 121.602259 - 121.487632;
+                        double height = 25.112275  - 25.015761;
+                        double widthScale  = Constants.CENTER_WIDTH/width;
+                        double heightScale = Constants.HEIGHT/height;
+
+                        double modifyX = (station.getX() - 121.487632) * widthScale;
+                        double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
+                        //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
+
+                        this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -1;
+                        this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -1;
 
                         this.ii = ii;
                         setBounds(x, y, 10, 10);
@@ -119,3 +132,4 @@ private class StationLabel extends JLabel
                 }
         }
 }
+

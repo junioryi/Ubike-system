@@ -18,6 +18,12 @@ public class UbikeSystem extends JPanel implements ActionListener
 	private static ArrayList<Station> stationList;
 	private static Scanner scanner;
 
+        /**
+         * JPanel constructor.
+         * Read the ID file and station info file into arraylist,
+         * and use GUIResource to construct label for each 
+         * station. After constructor, print them on frame.
+         */
         public UbikeSystem() throws IOException
         {
                 File finID = new File("RFIDCard.txt");

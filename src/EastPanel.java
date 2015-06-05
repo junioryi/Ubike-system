@@ -10,6 +10,15 @@ public class EastPanel extends JPanel implements Constants
         //public static final int width  = Constants.EAST_PANEL_WIDTH;
         //public static final int height = Constants.HEIGHT;
 
+        /**
+         * Panel constructor.
+         * A panel I would like to show info about the station.
+         * When user click on the station label, it will show
+         * the info about that station in this panel.
+         *
+         * TODO: Showing info NOT implemented.
+         *
+         */
         public EastPanel()
         {
                 //setBackground(Color.BLUE);
@@ -27,6 +36,9 @@ public class EastPanel extends JPanel implements Constants
                 g.drawString(s, 0, 0+g.getFontMetrics().getHeight());
         }
 
+        /**
+         * Testing code for east panel.
+         */
         public static void main(String[] args)
         {
                 JFrame f = new JFrame();
