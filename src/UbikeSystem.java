@@ -27,7 +27,7 @@ public class UbikeSystem extends JPanel implements ActionListener
                 stationList = inputStation(fin);
 
                 gui = new GUIResource(this, stationList);
-                setFocusable(true);
+                //setFocusable(true);
                 setLayout(null);
                 //keyController = new KeyController();
                 drawStation();

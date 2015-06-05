@@ -26,65 +26,65 @@ public class GUIResource
                 background = backImageIcon.getImage();
 
                 stationResource = new StationLabel[ stationList.size() ];
-                for (int i = 0; i < stationList.size(); ++i)
-                {
-                        Station station = (Station)stationList.get(i);
-                        
-                        ImageIcon ii = new ImageIcon(
-                                        this.getClass().getResource("images/greenDot.png"));
-
-                        stationResource[i] = new StationLabel(station, ii, i);
-                }
-        }
-
-        public void setStationLocation(int index, int x, int y)
+        for (int i = 0; i < stationList.size(); ++i)
         {
-                stationResource[index].setLocation(x, y);
+                Station station = (Station)stationList.get(i);
+                
+                ImageIcon ii = new ImageIcon(
+                                this.getClass().getResource("images/greenDot.png"));
+
+                stationResource[i] = new StationLabel(station, ii, i);
         }
-        public void enableMouseListener(int index)
+}
+
+public void setStationLocation(int index, int x, int y)
+{
+        stationResource[index].setLocation(x, y);
+}
+public void enableMouseListener(int index)
+{
+        stationResource[index].enableMouseListener();
+}
+public void disableMouseListener(int index)
+{
+        stationResource[index].disableMouseListener();
+}
+
+private class StationLabel extends JLabel
+{
+        private MouseController mouseController;
+        private int x, y;
+        private int index;
+        private int capacity;
+        private int available;
+        private ImageIcon ii;
+        private Station station;
+
+        public StationLabel(Station station, ImageIcon ii, int index)
         {
-                stationResource[index].enableMouseListener();
-        }
-        public void disableMouseListener(int index)
-        {
-                stationResource[index].disableMouseListener();
-        }
+                super(ii);
+                mouseController = new MouseController();
+                this.station = station;
+                this.index = index;
+                // Boundary:
+                // 25.015761N, 121.487632E
+                // 25.112275N, 121.602259E
+                double width  = 121.602259 - 121.487632;
+                double height = 25.112275  - 25.015761;
+                double widthScale  = Constants.CENTER_WIDTH/width;
+                double heightScale = Constants.HEIGHT/height;
 
-        private class StationLabel extends JLabel
-        {
-                private MouseController mouseController;
-                private int x, y;
-                private int index;
-                private int capacity;
-                private int available;
-                private ImageIcon ii;
-                private Station station;
+                double modifyX = (station.getX() - 121.487632) * widthScale;
+                double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
+                //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
 
-                public StationLabel(Station station, ImageIcon ii, int index)
-                {
-                        super(ii);
-                        mouseController = new MouseController();
-                        this.station = station;
-                        this.index = index;
-                        // Boundary:
-                        // 25.015761N, 121.487632E
-                        // 25.112275N, 121.602259E
-                        double width  = 121.602259 - 121.487632;
-                        double height = 25.112275  - 25.015761;
-                        double widthScale  = Constants.WIDTH/width;
-                        double heightScale = Constants.HEIGHT/height;
-
-                        double modifyX = (station.getX() - 121.602259) * widthScale;
-                        double modifyY = Constants.HEIGHT - ((station.getY() - 25.112275) * heightScale);
-
-                        this.x = (int)modifyX;
-                        this.y = (int)modifyY;
+                this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -1;
+                this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -1;
 
                         this.ii = ii;
                         setBounds(x, y, 10, 10);
                         setIcon(ii);
                         updateUI();
-                        System.out.println("x, y: " + x + ", " + y);
                         //this.setBounds(x, y, 10, 10);
 
                 }
