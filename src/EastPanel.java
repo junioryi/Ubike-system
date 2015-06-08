@@ -22,6 +22,22 @@ public class EastPanel extends JPanel implements Constants
         public EastPanel()
         {
                 //setBackground(Color.BLUE);
+                
+                setLayout(new BorderLayout());
+                
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new GridLayout(1, 3));
+                
+                JButton rentButton = new JButton("借車");
+                buttonPanel.add(rentButton);
+                JButton returnButton = new JButton("還車");
+                buttonPanel.add(returnButton);
+                JButton queryButton = new JButton("查詢");
+                buttonPanel.add(queryButton);
+                
+                add(buttonPanel, BorderLayout.SOUTH);
+
+
         }
 
         @Override
@@ -34,6 +50,7 @@ public class EastPanel extends JPanel implements Constants
                 //g.drawString(s, getWidth()/2 - g.getFontMetrics().stringWidth(s)/2,
                 //                getHeight()/2 + g.getFontMetrics().getHeight()/2);
                 g.drawString(s, 0, 0+g.getFontMetrics().getHeight());
+
         }
 
         /**
