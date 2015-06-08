@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.io.*;
-import java.awt.BorderLayout;
+import java.awt.*;
 
 public class MainFrame extends JFrame implements Constants
 {
@@ -9,7 +9,7 @@ public class MainFrame extends JFrame implements Constants
         {
                 //add(ubikeSystem);
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                setSize(1200, Constants.CENTER_WIDTH + Constants.EAST_PANEL_WIDTH);
+                setSize(Constants.CENTER_WIDTH + Constants.EAST_PANEL_WIDTH, Constants.HEIGHT);
                 setLayout(new BorderLayout());
 
                 // Add Taipei map panel.
