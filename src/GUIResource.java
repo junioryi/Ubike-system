@@ -41,7 +41,7 @@ public class GUIResource
                         ImageIcon ii = new ImageIcon(
                                         this.getClass().getResource("images/greenDot.png"));
                         Image image = ii.getImage();
-                        Image newimg = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                        Image newimg = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
                         ii = new ImageIcon(newimg);
 
                         stationResource[i] = new StationLabel(station, ii, i);
@@ -102,15 +102,15 @@ public class GUIResource
                         double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
                         //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
 
-                        this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -20;
-                        this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -20;
+                        this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -100;
+                        this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -100;
 
                         this.ii = ii;
                         //setBounds(x, y, 10, 10);
                         //setIcon(ii);
-                        setText("test"); // Doesn't show ?
+                        //setText("test"); // Doesn't show ?
                         setLocation(this.x, this.y);
-                        setSize(10, 10);
+                        setSize(30, 30);
                         setIcon(ii); 
                         //updateUI();
                         //this.setBounds(x, y, 10, 10);
