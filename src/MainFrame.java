@@ -12,10 +12,9 @@ public class MainFrame extends JFrame implements Constants
                 setSize(Constants.WIDTH, Constants.HEIGHT);
                 setLayout(new BorderLayout());
 
-                JPanel eastPanel = new EastPanel();
+                EastPanel eastPanel = new EastPanel();
                 eastPanel.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.HEIGHT));
                 getContentPane().add(eastPanel, BorderLayout.EAST);
-
 
                 // Add Taipei map panel.
                 UbikeSystem ubikeSystem = new UbikeSystem(eastPanel);

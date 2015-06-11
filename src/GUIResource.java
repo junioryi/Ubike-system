@@ -16,10 +16,10 @@ public class GUIResource
         public Image background;
         public StationLabel[] stationResource;
         private UbikeSystem ubikeSystem;
-        private JPanel eastPanel;
+        private EastPanel eastPanel;
 
         public GUIResource(UbikeSystem ubikeSystem, ArrayList<Station> stationList,
-                JPanel eastPanel)
+                EastPanel eastPanel)
         {
                 this.ubikeSystem = ubikeSystem;
                 this.eastPanel = eastPanel;
@@ -40,11 +40,16 @@ public class GUIResource
                         
                         ImageIcon ii = new ImageIcon(
                                         this.getClass().getResource("images/greenDot.png"));
+                        // Resize the icon.
                         Image image = ii.getImage();
                         Image newimg = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
                         ii = new ImageIcon(newimg);
 
                         stationResource[i] = new StationLabel(station, ii, i);
+                }
+                for (int i = 0; i < stationList.size(); ++i)
+                {
+                        enableMouseListener(i);
                 }
         }
 
@@ -143,6 +148,8 @@ public class GUIResource
                         {
                                 // show the information about 
                                 // the station.
+                                eastPanel.displayStation(station);
+                                System.out.println(station.getName() + " is clicked.");
                         }
                 }
         }

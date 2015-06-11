@@ -25,7 +25,7 @@ public class UbikeSystem extends JPanel implements ActionListener
          * and use GUIResource to construct label for each 
          * station. After constructor, print them on frame.
          */
-        public UbikeSystem(JPanel eastPanel) throws IOException
+        public UbikeSystem(EastPanel eastPanel) throws IOException
         {
                 File finID = new File("RFIDCard.txt");
                 userList = inputUser(finID);
