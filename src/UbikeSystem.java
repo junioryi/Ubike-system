@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import javax.swing.*;
+import java.awt.*;
 
 import java.awt.event.*;
 import java.awt.event.KeyAdapter;
@@ -24,7 +25,7 @@ public class UbikeSystem extends JPanel implements ActionListener
          * and use GUIResource to construct label for each 
          * station. After constructor, print them on frame.
          */
-        public UbikeSystem() throws IOException
+        public UbikeSystem(JPanel eastPanel) throws IOException
         {
                 File finID = new File("RFIDCard.txt");
                 userList = inputUser(finID);
@@ -32,19 +33,41 @@ public class UbikeSystem extends JPanel implements ActionListener
                 File fin = new File("ubike.csv");
                 stationList = inputStation(fin);
 
-                gui = new GUIResource(this, stationList);
-                //setFocusable(true);
                 setLayout(null);
+
+                gui = new GUIResource(this, stationList, eastPanel);
+                //setFocusable(true);
                 //keyController = new KeyController();
                 drawStation();
-                
         }
 
         void drawStation()
         {
                 for (int i = 0; i < stationList.size(); ++i)
                 {
-                        add(gui.stationResource[i], 0);
+                        add(gui.stationResource[i]);
+                }
+        }
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+                repaint();
+        }
+        @Override
+        public void paintComponent(Graphics g)
+        {
+                super.paintComponent(g);
+                g.drawImage(gui.background, 0, 0, 
+                        Constants.CENTER_WIDTH, Constants.HEIGHT, this);
+        }
+        /**
+         * Not in use for now.
+         */
+        private class KeyController extends KeyAdapter
+        {
+                public KeyController()
+                {
+                        super();
                 }
         }
 
@@ -175,27 +198,6 @@ public class UbikeSystem extends JPanel implements ActionListener
 
 	}
 
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-                repaint();
-        }
-        @Override
-        public void paintComponent(Graphics g)
-        {
-                super.paintComponent(g);
-                g.drawImage(gui.background, 0, 0, Constants.CENTER_WIDTH, Constants.HEIGHT, this);
-        }
-        /**
-         * Not in use for now.
-         */
-        private class KeyController extends KeyAdapter
-        {
-                public KeyController()
-                {
-                        super();
-                }
-        }
 
 	public static ArrayList<User> inputUser(File userFin) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(userFin));

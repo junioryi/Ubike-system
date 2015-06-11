@@ -9,18 +9,18 @@ public class MainFrame extends JFrame implements Constants
         {
                 //add(ubikeSystem);
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                setSize(Constants.CENTER_WIDTH + Constants.EAST_PANEL_WIDTH, Constants.HEIGHT);
+                setSize(Constants.WIDTH, Constants.HEIGHT);
                 setLayout(new BorderLayout());
 
-                // Add Taipei map panel.
-                JPanel ubikeSystem = new UbikeSystem();
-                ubikeSystem.setSize(Constants.CENTER_WIDTH, Constants.HEIGHT);
-                getContentPane().add(ubikeSystem, BorderLayout.CENTER);
-
-                // Add right panel to display information.
                 JPanel eastPanel = new EastPanel();
-                eastPanel.setSize(Constants.EAST_PANEL_WIDTH, Constants.HEIGHT);
+                eastPanel.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.HEIGHT));
                 getContentPane().add(eastPanel, BorderLayout.EAST);
+
+
+                // Add Taipei map panel.
+                UbikeSystem ubikeSystem = new UbikeSystem(eastPanel);
+                ubikeSystem.setPreferredSize(new Dimension(Constants.CENTER_WIDTH, Constants.HEIGHT));
+                getContentPane().add(ubikeSystem, BorderLayout.CENTER);
 
                 setTitle("OOP Fianl: Ubike Renting System");
                 setResizable(false);

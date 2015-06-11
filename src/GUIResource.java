@@ -5,16 +5,24 @@ import java.awt.Graphics;
 import java.awt.Color;
 
 import java.util.ArrayList;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import java.io.*;
+import javax.imageio.ImageIO;
 
 public class GUIResource
 {
         public Image background;
         public StationLabel[] stationResource;
         private UbikeSystem ubikeSystem;
+        private JPanel eastPanel;
 
-        public GUIResource(UbikeSystem ubikeSystem, ArrayList<Station> stationList)
+        public GUIResource(UbikeSystem ubikeSystem, ArrayList<Station> stationList,
+                JPanel eastPanel)
         {
                 this.ubikeSystem = ubikeSystem;
+                this.eastPanel = eastPanel;
 
                 // The background image left down corner is 
                 // 25.015761N, 121.487632E
@@ -32,6 +40,9 @@ public class GUIResource
                         
                         ImageIcon ii = new ImageIcon(
                                         this.getClass().getResource("images/greenDot.png"));
+                        Image image = ii.getImage();
+                        Image newimg = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                        ii = new ImageIcon(newimg);
 
                         stationResource[i] = new StationLabel(station, ii, i);
                 }
@@ -75,7 +86,7 @@ public class GUIResource
                  */
                 public StationLabel(Station station, ImageIcon ii, int index)
                 {
-                        super(ii);
+                        super(ii, JLabel.CENTER);
                         mouseController = new MouseController();
                         this.station = station;
                         this.index = index;
@@ -91,13 +102,17 @@ public class GUIResource
                         double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
                         //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
 
-                        this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -1;
-                        this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -1;
+                        this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -20;
+                        this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -20;
 
                         this.ii = ii;
-                        setBounds(x, y, 10, 10);
-                        setIcon(ii);
-                        updateUI();
+                        //setBounds(x, y, 10, 10);
+                        //setIcon(ii);
+                        setText("test"); // Doesn't show ?
+                        setLocation(this.x, this.y);
+                        setSize(10, 10);
+                        setIcon(ii); 
+                        //updateUI();
                         //this.setBounds(x, y, 10, 10);
 
                 }
