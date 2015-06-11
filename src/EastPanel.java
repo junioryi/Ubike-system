@@ -9,6 +9,7 @@ import java.util.*;
 public class EastPanel extends JPanel implements Constants, ActionListener
 {
         private JPanel buttonPanel;
+        private JPanel stationPanel;
         public JTextField inputID;
         //public static final int width  = Constants.EAST_PANEL_WIDTH;
         //public static final int height = Constants.HEIGHT;
@@ -117,14 +118,29 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 */
 
         }
-        public static void displayStation(Station station)
+        public void displayStation(Station station)
         {
-                JPanel stationPanel = new JPanel();
+                if (stationPanel != null) {
+                        this.remove(stationPanel);
+                }
+                stationPanel = new JPanel();
                 stationPanel.setLayout(new BoxLayout(stationPanel,
                             BoxLayout.Y_AXIS));
                 String name = station.getName();
                 int capacity = station.getCapacity();
                 int available = station.getAvailable();
+
+                JLabel stationName = new JLabel(name);
+                JLabel stationCap  = new JLabel("Park spaces: " + capacity);
+                JLabel stationAva  = new JLabel("Available bikes: " + available);
+                stationPanel.add(stationName);
+                stationPanel.add(stationCap);
+                stationPanel.add(stationAva);
+                this.remove(buttonPanel);
+                this.add(stationPanel);
+                this.add(buttonPanel);
+                this.revalidate();
+                this.repaint();
         }
 
         /**
