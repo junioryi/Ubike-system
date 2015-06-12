@@ -33,17 +33,38 @@ public class GUIResource
                 
                 background = backImageIcon.getImage();
 
+                // Green Icon
+                ImageIcon greenii = new ImageIcon(
+                                this.getClass().getResource("images/greenDot.png"));
+                Image greenimg = greenii.getImage();
+                Image newGreen = greenimg.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                greenii = new ImageIcon(newGreen);
+
+                // Orange Icon
+                ImageIcon orangeii = new ImageIcon(
+                                this.getClass().getResource("images/orangeDot.png"));
+                Image orangeimg = orangeii.getImage();
+                Image newOrange = orangeimg.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                orangeii = new ImageIcon(newOrange);
+
+                // Red Icon
+                ImageIcon redii = new ImageIcon(
+                                this.getClass().getResource("images/redDot.png"));
+                Image redimg = redii.getImage();
+                Image newRed = redimg.getScaledInstance(15, 15, Image.SCALE_SMOOTH);
+                redii = new ImageIcon(newRed);
+
                 stationResource = new StationLabel[ stationList.size() ];
                 for (int i = 0; i < stationList.size(); ++i)
                 {
                         Station station = (Station)stationList.get(i);
-                        
-                        ImageIcon ii = new ImageIcon(
-                                        this.getClass().getResource("images/greenDot.png"));
-                        // Resize the icon.
-                        Image image = ii.getImage();
-                        Image newimg = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-                        ii = new ImageIcon(newimg);
+                        // Oragne dot: parking space < 10.
+                        // Red dot: available bikes < 10.
+                        ImageIcon ii = greenii;
+                        int available = station.getAvailable();
+                        int capacity = station.getCapacity();
+                        if (capacity < 10) ii = orangeii;
+                        if (available < 10) ii = redii;
 
                         stationResource[i] = new StationLabel(station, ii, i);
                 }
@@ -98,16 +119,12 @@ public class GUIResource
                         // Boundary:
                         // 25.015761N, 121.487632E
                         // 25.112275N, 121.602259E
-                        //double width  = 121.602259 - 121.487632;
-                        //double height = 25.112275  - 25.015761;
                         double width  = 121.632369 - 121.474561;
                         double height = 25.090168 - 25.001412;
 
                         double widthScale  = Constants.CENTER_WIDTH/width;
                         double heightScale = Constants.HEIGHT/height;
 
-                        //double modifyX = (station.getX() - 121.487632) * widthScale;
-                        //double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
                         double modifyX = (station.getX() - 121.474561) * widthScale;
                         double modifyY = Constants.HEIGHT - ((station.getY() - 25.001412) * heightScale);
                         //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
@@ -131,10 +148,10 @@ public class GUIResource
                 {
                         super.paintComponent(g);
                         //System.out.println("hello");
-                        g.setColor(Color.yellow);
-                        g.drawOval(x, y, 70, 70);
-                        g.fillOval(x, y, 70, 70);
-                        ui.update(g, this);
+                        //g.setColor(Color.yellow);
+                        //g.drawOval(x, y, 70, 70);
+                        //g.fillOval(x, y, 70, 70);
+                        //ui.update(g, this);
                         //super.paintComponent(g);
 
                         //g.drawImage(ii, x, y, 10, 10, this);
