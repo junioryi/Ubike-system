@@ -29,7 +29,7 @@ public class GUIResource
                 // up-right
                 // 25.112275N, 121.602259E
                 ImageIcon backImageIcon = new ImageIcon(
-                                this.getClass().getResource("images/Taipei.png"));
+                                this.getClass().getResource("images/Taipei2.png"));
                 
                 background = backImageIcon.getImage();
 
@@ -98,13 +98,18 @@ public class GUIResource
                         // Boundary:
                         // 25.015761N, 121.487632E
                         // 25.112275N, 121.602259E
-                        double width  = 121.602259 - 121.487632;
-                        double height = 25.112275  - 25.015761;
+                        //double width  = 121.602259 - 121.487632;
+                        //double height = 25.112275  - 25.015761;
+                        double width  = 121.632369 - 121.474561;
+                        double height = 25.090168 - 25.001412;
+
                         double widthScale  = Constants.CENTER_WIDTH/width;
                         double heightScale = Constants.HEIGHT/height;
 
-                        double modifyX = (station.getX() - 121.487632) * widthScale;
-                        double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
+                        //double modifyX = (station.getX() - 121.487632) * widthScale;
+                        //double modifyY = Constants.HEIGHT - ((station.getY() - 25.015761) * heightScale);
+                        double modifyX = (station.getX() - 121.474561) * widthScale;
+                        double modifyY = Constants.HEIGHT - ((station.getY() - 25.001412) * heightScale);
                         //System.out.println("" + (station.getX() - 121.487632) + ", " + modifyX);
 
                         this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -100;
