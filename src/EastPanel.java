@@ -158,6 +158,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 public JButton addUserButton;
                 public JButton oldUserButton;
                 public JTextField inputID;
+
                 public UserPanel() {
                         setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.USER_HEIGHT));
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -173,12 +174,14 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         });
                         this.add(inputID);
 
+                        oldUserButton = new JButton("Old User");
+                        oldUserButton.setActionCommand("old user");
+                        oldUserButton.addActionListener(this);
+                        this.add(oldUserButton);
 
                         addUserButton = new JButton("New User");
                         addUserButton.setActionCommand("add user");
                         addUserButton.addActionListener(this);
-
-                        oldUserButton = new JButton("Old User");
                         this.add(addUserButton);
                 }
                 public void actionPerformed(ActionEvent e)
@@ -188,6 +191,20 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 System.out.println("add user button pushed");
                                 createUser();
                         }
+                        else if ("old user".equals(e.getActionCommand()))
+                        {
+                                System.out.println("old user button pushed");
+                                System.out.println(inputID.getText());
+                                try {
+                                        int id = Integer.parseInt(inputID.getText());
+                                        displayUserInfo(id);
+                                }
+                                catch (Exception excp){
+                                        System.out.println("wrong input");
+                                        inputID.setText("Wrong input, try again.");
+                                }
+                        }
+
                 }
                 public void createUser() 
                 {
