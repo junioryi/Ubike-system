@@ -1,5 +1,6 @@
 
 public class User {
+        private int index;
 	private long userID;
 	private String strID;
 	private int value = 50;
@@ -11,12 +12,20 @@ public class User {
 	private int times;
 
 
-	public User(long userID,String strID)
+	public User(int index, long userID,String strID)
 	{
+                this.index  = index;
 		this.userID = userID;
-		this.strID=strID;
-		this.value = 50;
+		this.strID  = strID;
+		this.value  = 50;
+                this.renttime   = 0;
+                this.returntime = 0;
+                this.totalTime  = 0;
 	}
+
+        public int getIndex() {
+                return index;
+        }
 
 	public long getUserID() {
 		return userID;
@@ -26,6 +35,10 @@ public class User {
 		return strID;
 	}
 	
+        public boolean getStatus() {
+                return isused;
+        }
+
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}

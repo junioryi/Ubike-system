@@ -18,6 +18,7 @@ public class UbikeSystem extends JPanel implements ActionListener
         private static ArrayList<User> userList;
 	private static ArrayList<Station> stationList;
 	private static Scanner scanner;
+        public static int userNum;
 
         /**
          * JPanel constructor.
@@ -27,6 +28,8 @@ public class UbikeSystem extends JPanel implements ActionListener
          */
         public UbikeSystem(EastPanel eastPanel) throws IOException
         {
+                userNum = 0;
+
                 File finID = new File("RFIDCard.txt");
                 userList = inputUser(finID);
 
@@ -197,6 +200,28 @@ public class UbikeSystem extends JPanel implements ActionListener
 		}
 
 	}
+        public int getUserNum() 
+        {
+                return userNum;
+        }
+        /**
+         * Create a new user.
+         *
+         * @return index, the new user's index.
+         */
+        public int createUser()
+        {
+                User newUser = new User(userNum, 0, "new user add by gui");
+                userList.add(newUser);
+                return newUser.getIndex();
+        }
+        public User getUser(int index)
+        {
+                if (index > userList.size()) {
+                        System.out.println("error: user index out of bound.");
+                }
+                return (User)userList.get(index);
+        }
 
 
 	public static ArrayList<User> inputUser(File userFin) throws IOException {
@@ -206,8 +231,9 @@ public class UbikeSystem extends JPanel implements ActionListener
 		while ((line = br.readLine()) != null) {
 			String[] splitedLine = line.split("-");
 			long id = Long.parseLong(splitedLine[0], 16);
-			User user = new User(id, line);
+			User user = new User(userNum, id, line);
 			userList.add(user);
+                        userNum += 1;
 		}
 		br.close();
 		return userList;

@@ -21,6 +21,8 @@ public class MainFrame extends JFrame implements Constants
                 ubikeSystem.setPreferredSize(new Dimension(Constants.CENTER_WIDTH, Constants.HEIGHT));
                 getContentPane().add(ubikeSystem, BorderLayout.CENTER);
 
+                eastPanel.setSystem(ubikeSystem);
+
                 setTitle("OOP Fianl: Ubike Renting System");
                 setResizable(false);
                 setVisible(true);
