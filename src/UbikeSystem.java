@@ -281,6 +281,32 @@ public class UbikeSystem extends JPanel implements ActionListener
 			System.out.println("非借車中");
 		}
 	}
+        public int rentBike(int userID, Station station)
+        {
+                User user = userList.get(userID);
+                if (user.getValue() < 5) {
+                        return Constants.NOT_ENOUGH;
+                }
+                else if (user.isused) {
+                        return Constants.IS_RENTING;
+                }
+                else if (station.getAvailable() == 0) {
+                        return Constants.NO_BIKE;
+                }
+                else {
+                        user.setRenttime(System.currentTimeMillis());
+			user.isused = true;
+			user.setRentstation(station);
+			user.setTimes(user.getTimes() + 1);
+			station.setCapacity(station.getCapacity()+1);
+			station.setAvailable(station.getAvailable()-1);
+			//rentalList.add(new Rental(user, station));
+			System.out.printf("借成功,站點名稱:%s,剩餘車輛:%d,剩餘空位:%d", station.getName(),
+					station.getAvailable(), station.getCapacity());
+                        return Constants.RENT_SUCCESS;
+		}                
+        }
+
 
 	public static void rentbike(long id, Station station,
 			ArrayList<User> userList, ArrayList<Rental> rentalList) {

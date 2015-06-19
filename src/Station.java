@@ -62,7 +62,6 @@ public class Station
     public String toString()
     {
         String s = new String();
-        // TODO: show more detail.
         return name;
     }
     public double getDistance(double x, double y){

@@ -147,14 +147,6 @@ public class GUIResource
                 public void paintComponent(Graphics g)
                 {
                         super.paintComponent(g);
-                        //System.out.println("hello");
-                        //g.setColor(Color.yellow);
-                        //g.drawOval(x, y, 70, 70);
-                        //g.fillOval(x, y, 70, 70);
-                        //ui.update(g, this);
-                        //super.paintComponent(g);
-
-                        //g.drawImage(ii, x, y, 10, 10, this);
                 }
                 public void enableMouseListener()
                 {

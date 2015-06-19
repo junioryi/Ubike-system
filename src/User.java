@@ -67,7 +67,7 @@ public class User {
 		this.returntime = returntime;
 	}
 
-	public Station getRentstation() {
+	public Station getRentStation() {
 		return rentstation;
 	}
 

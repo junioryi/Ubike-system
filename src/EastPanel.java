@@ -11,8 +11,16 @@ public class EastPanel extends JPanel implements Constants, ActionListener
 {
         private JPanel buttonPanel;
         private JPanel stationPanel;
+        private EastPanel.UserPanel userPanel;
+        private JLabel errorLabel;
         private UbikeSystem ubikeSystem;
-        public JTextField inputID;
+
+        private int userIndex;
+        private Station station;
+
+        private JTextField inputID;
+        private boolean hasUser;
+        private boolean hasStation;
 
         //private JButton addUserButton;
         //private JButton oldUserButton;
@@ -25,57 +33,53 @@ public class EastPanel extends JPanel implements Constants, ActionListener
          * A panel I would like to show info about the station.
          * When user click on the station label, it will show
          * the info about that station in this panel.
-         *
-         * TODO: Showing info NOT implemented.
-         *
          */
         public EastPanel()
         {
+                //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                 setLayout(new FlowLayout());
                 // Display project name.
                 JLabel welcome = new JLabel("Ubike System");
                 welcome.setFont(new Font("Verdana", 1, 20));
                 this.add(welcome);
 
-                JPanel userPanel = new UserPanel();
+                // Display error if necessary.
+                errorLabel = new JLabel("");
+                errorLabel.setForeground(Color.red);
+                this.add(errorLabel);
+
+                hasUser = false;
+                hasStation = false;
+
+                userPanel = new UserPanel();
+                userPanel.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.USER_HEIGHT));
                 this.add(userPanel);
 
-                buttonPanel = new JPanel();
-                buttonPanel.setLayout(new GridLayout(2,1));
-                /*
-                // Add new user button.
-                JButton addUserButton = new JButton("New User");
-                addUserButton.setActionCommand("add user");
-                addUserButton.addActionListener(this);
-                buttonPanel.add(addUserButton);
-
-                // Old user button.
-                JButton oldUserButton = new JButton("Old User");
-                oldUserButton.setActionCommand("old user");
-                oldUserButton.addActionListener(this);                
-                buttonPanel.add(oldUserButton);
-                */
-
-                //this.add(buttonPanel);
-
-                /*
-                setLayout(new BorderLayout());
-                
-                buttonPanel = new JPanel();
-                buttonPanel.setLayout(new GridLayout(1, 3));
-                
-                JButton rentButton = new JButton("借車");
+                buttonPanel = new JPanel(new GridLayout(1, 3));
+                // Rent button
+                JButton rentButton = new JButton("Rent");
+                rentButton.setActionCommand("rent");
+                rentButton.addActionListener(this);
                 buttonPanel.add(rentButton);
-                JButton returnButton = new JButton("還車");
+                // Return button
+                JButton returnButton = new JButton("Return");
+                returnButton.setActionCommand("return");
+                returnButton.addActionListener(this);
                 buttonPanel.add(returnButton);
-                JButton queryButton = new JButton("查詢");
-                buttonPanel.add(queryButton);
-                
-                add(buttonPanel, BorderLayout.NORTH);
-                */
-
+                // Only when user has login and choose a station
+                // can the user do the renting or returning.
+                if (hasUser && hasStation) {
+                        this.add(buttonPanel);
+                }
 
         }
+        /** 
+         * Connect to the system.
+         * To send user input info to the system, 
+         * renting, returning and so on.
+         *
+         * @param UbikeSystem, a working system.
+         */
         public void setSystem(UbikeSystem us)
         {
                 this.ubikeSystem = us;
@@ -84,14 +88,28 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         {
                 this.remove(buttonPanel);
                 String gotID;
-                if ("add user".equals(e.getActionCommand()))
+                if ("rent".equals(e.getActionCommand()))
                 {
-                        System.out.println("add user button pushed");
+                        System.out.println("Rent button pushed");
+                        int info = ubikeSystem.rentBike(userIndex, station);
+                        switch(info) {
+                                case(NOT_ENOUGH):
+                                        errorLabel.setText("Not enough momey left.");
+                                        break;
+                                case(IS_RENTING):
+                                        errorLabel.setText("User has rented a bike.");
+                                        break;
+                                case(NO_BIKE):
+                                        errorLabel.setText("There's no bike in station.");
+                                        break;
+                                case(RENT_SUCCESS):
+                                        userPanel.displayUserInfo(userIndex);
+                        }
                 }
-                else if ("old user".equals(e.getActionCommand()))
+                else if ("return".equals(e.getActionCommand()))
                 {
-                        System.out.println("old user button pushed");
-                        oldUserAction();
+                        System.out.println("Return button pushed");
+                        //oldUserAction();
                 }
 
                 // Repaint the panel.
@@ -99,23 +117,6 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 this.repaint();
 
         }
-        public void oldUserAction()
-        {
-                JPanel oldUserPanel = new JPanel(new FlowLayout());
-                JLabel hint = new JLabel("enter your id: ");
-                oldUserPanel.add(hint);
-
-                inputID = new JTextField(8);
-                inputID.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                                System.out.println("User input: " + inputID.getText());
-                        }
-                });
-                oldUserPanel.add(inputID);
-
-                this.add(oldUserPanel);
-        }
-                
 
         @Override
         public void paintComponent(Graphics g)
@@ -133,6 +134,9 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 if (stationPanel != null) {
                         this.remove(stationPanel);
                 }
+                // East panel record the station user chose.
+                this.station = station;
+
                 stationPanel = new JPanel();
                 stationPanel.setLayout(new BoxLayout(stationPanel,
                             BoxLayout.Y_AXIS));
@@ -184,6 +188,9 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         addUserButton.addActionListener(this);
                         this.add(addUserButton);
                 }
+                public void doNothing() {
+                        System.out.println("nothing");
+                }
                 public void actionPerformed(ActionEvent e)
                 {
                         if ("add user".equals(e.getActionCommand()))
@@ -197,6 +204,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 System.out.println(inputID.getText());
                                 try {
                                         int id = Integer.parseInt(inputID.getText());
+                                        userIndex = id;
                                         displayUserInfo(id);
                                 }
                                 catch (Exception excp){
@@ -208,8 +216,9 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 }
                 public void createUser() 
                 {
-                        int userIndex = ubikeSystem.createUser();
-                        displayUserInfo(userIndex);
+                        int id = ubikeSystem.createUser();
+                        userIndex = id;
+                        displayUserInfo(id);
                 }
                 public void displayUserInfo(int index)
                 {
@@ -224,11 +233,15 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         JLabel startTime   = new JLabel("" + rentTime);
                         JLabel returnLabel = new JLabel("" + returnTime);
                         JLabel totalLabel  = new JLabel("Total time: " + totalTime);
+                        JLabel rentStation = new JLabel("");
                       
                         this.add(indexLabel);
                         this.add(stateLabel);
                         if (status) {
+                                String stationName = user.getRentStation().toString();
+                                rentStation.setText("Rent station: " + stationName);
                                 this.add(totalLabel);
+                                this.add(rentStation);
                         }
                         this.updateUI();
                 }
