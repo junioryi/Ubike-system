@@ -213,6 +213,7 @@ public class UbikeSystem extends JPanel implements ActionListener
         {
                 User newUser = new User(userNum, 0, "new user add by gui");
                 userList.add(newUser);
+                userNum += 1;
                 return newUser.getIndex();
         }
         public User getUser(int index)
@@ -344,6 +345,54 @@ public class UbikeSystem extends JPanel implements ActionListener
 		}
 
 	}
+
+        public int returnBike(int userIndex, Station station)
+        {
+                User user = userList.get(userIndex);
+                if (station.getCapacity() == 0) {
+                        return Constants.NO_PLACE;
+                }
+                else if (!user.isused) {
+                        return Constants.HASNT_RENTED;
+                }
+                else {
+			int charge;
+			user.setReturntime(System.currentTimeMillis());
+			long deltatime = (System.currentTimeMillis() - user.getRenttime()) / 1000 / 60;
+			user.setTotalTime(user.getTotalTime() + deltatime);
+			if (deltatime < 30) {// 30分鐘內
+				charge = 5;
+			} else if (deltatime < 240) {// 4小時內
+				if (deltatime % 30 == 0) {
+					charge = (int) (10 * deltatime / 30);
+				} else {
+					charge = (int) (10 * deltatime / 30) + 1;
+				}
+			} else if (deltatime < 480) {// 8小時內
+				if (deltatime % 30 == 0) {
+					charge = (int) (20 * deltatime / 30);
+				} else {
+					charge = (int) (20 * deltatime / 30) + 1;
+				}
+			} else {// 逾8小時
+				if (deltatime % 30 == 0) {
+					charge = (int) (40 * deltatime / 30);
+				} else {
+					charge = (int) (40 * deltatime / 30) + 1;
+				}
+			}
+			user.setValue(user.getValue() - charge);
+			user.setTotalTime(user.getTotalTime()+deltatime);
+			user.isused = false;
+			station.setCapacity(station.getCapacity()-1);
+			station.setAvailable(station.getAvailable()+1);
+			//rentalList.add(new Rental(user, station));
+			System.out.printf("還成功,扣款金額:%d,悠遊卡餘額:%d", charge, user.getValue());
+                        return Constants.RETURN_SUCCESS;
+                }
+        }
+
+
 
 	public static void returnbike(User user, Station station,
 			ArrayList<Rental> rentalList) {
