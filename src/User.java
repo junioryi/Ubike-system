@@ -6,6 +6,7 @@ public class User {
 	private int value = 50;
 	private long renttime;
 	private Station rentstation;
+        private Station returnStation;
 	private long returntime;
 	public boolean isused=false;
     	private long totalTime;	//unit:min
@@ -21,6 +22,8 @@ public class User {
                 this.renttime   = 0;
                 this.returntime = 0;
                 this.totalTime  = 0;
+                this.rentstation = null;
+                this.returnStation = null;
 	}
 
         public int getIndex() {
@@ -74,6 +77,14 @@ public class User {
 	public void setRentstation(Station rentstation) {
 		this.rentstation = rentstation;
 	}
+
+        public Station getReturnStation() {
+                return returnStation;
+        }
+
+        public void setReturnStation(Station station) {
+                this.returnStation = station;
+        }
 
 	public long getTotalTime() {
 		return totalTime;

@@ -18,7 +18,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         private int userIndex;
         private Station station;
 
-        private JTextField inputID;
+        public JTextField inputID;
         private boolean hasUser;
         private boolean hasStation;
 
@@ -41,9 +41,12 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 errorLabel.setForeground(Color.red);
                 this.add(errorLabel);
 
+                // booleans which check user has click a
+                // station and login.
                 hasUser = false;
                 hasStation = false;
 
+                // Add user info panel
                 userPanel = new UserPanel(this);
                 userPanel.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.USER_HEIGHT));
                 this.add(userPanel);
@@ -66,6 +69,13 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         this.add(buttonPanel);
                 }
 
+        }
+        /**
+         * Repaint all the panel in east panel.
+         */
+        public void repaintAll()
+        {
+                // TODO
         }
         /** 
          * Connect to the system.
@@ -130,6 +140,10 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         }
         public void displayStation(Station station)
         {
+                // Reset error message.
+                errorLabel.setText("");
+
+                // Remove last station label.
                 if (stationPanel != null) {
                         this.remove(stationPanel);
                 }
@@ -157,16 +171,22 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         }
         public void relogin() 
         {
+                this.remove(userPanel);
+                this.remove(buttonPanel);
+                if (stationPanel != null) {
+                        this.remove(stationPanel);
+                }
                 userPanel = new UserPanel(this);
+                this.add(userPanel);
                 userIndex = -1;
                 station = null;
                 hasUser = false;
                 hasStation = false;
                 this.revalidate();
                 this.repaint();
+
         }
                 
-
         private class UserPanel extends JPanel implements ActionListener 
         {
                 public EastPanel eastPanel;
@@ -176,6 +196,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 public JTextField inputID;
 
                 public UserPanel(EastPanel eastPanel) {
+                        // connect to east panel.
                         this.eastPanel = eastPanel;
                         setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, Constants.USER_HEIGHT));
                         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -189,6 +210,10 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                         System.out.println("User input: " + inputID.getText());
                                 }
                         });
+                        inputID.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH, 20));
+                        inputID.setMaximumSize(
+                                        inputID.getPreferredSize());
+                                        //new Dimension(100, Constants.EAST_PANEL_WIDTH));
                         this.add(inputID);
 
                         oldUserButton = new JButton("Old User");
@@ -226,6 +251,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                         displayUserInfo(id);
                                 }
                                 catch (Exception excp){
+                                        excp.printStackTrace();
                                         System.out.println("wrong input");
                                         inputID.setText("Wrong input, try again.");
                                 }
@@ -233,12 +259,15 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         else if ("relogin".equals(e.getActionCommand()))
                         {
                                 System.out.println("Relogin button pushed.");
-                                eastPanel.relogin();
                                 this.removeAll();
                                 this.add(inputID);
                                 this.add(oldUserButton);
                                 this.add(addUserButton);
+                                eastPanel.relogin();
                         }
+
+                        EastPanel.this.revalidate();
+                        EastPanel.this.repaint();
 
                 }
                 /*
@@ -260,8 +289,8 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         JLabel indexLabel  = new JLabel("Hi, user no." + index);
                         JLabel stateLabel  = new JLabel("Is renting: " + status);
                         JLabel momeyLabel  = new JLabel("Money: " + user.getValue());
-                        JLabel startTime   = new JLabel("" + rentTime);
-                        JLabel returnLabel = new JLabel("" + returnTime);
+                        JLabel startTime   = new JLabel("Rent time: " + rentTime);
+                        JLabel returnLabel = new JLabel("Last return: " + returnTime);
                         JLabel totalLabel  = new JLabel("Total time: " + totalTime);
                         JLabel rentStation = new JLabel("");
                       
@@ -269,10 +298,17 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         this.add(stateLabel);
                         this.add(momeyLabel);
                         if (status) {
+                                this.add(startTime);
                                 String stationName = user.getRentStation().toString();
                                 rentStation.setText("Rent station: " + stationName);
                                 this.add(totalLabel);
                                 this.add(rentStation);
+                        }
+                        else if (user.getReturnStation() != null){
+                                // User return the bike.
+                                String stationName = user.getReturnStation().toString();
+                                returnLabel.setText("Last Return: " + stationName);
+                                this.add(returnLabel);
                         }
                         this.add(reloginButton);
                         this.updateUI();

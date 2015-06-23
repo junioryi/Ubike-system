@@ -358,6 +358,7 @@ public class UbikeSystem extends JPanel implements ActionListener
                 else {
 			int charge;
 			user.setReturntime(System.currentTimeMillis());
+                        user.setReturnStation(station);
 			long deltatime = (System.currentTimeMillis() - user.getRenttime()) / 1000 / 60;
 			user.setTotalTime(user.getTotalTime() + deltatime);
 			if (deltatime < 30) {// 30分鐘內
