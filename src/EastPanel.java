@@ -117,6 +117,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 textArea = new JTextArea("Click the buttons to sort near station by distance,\n available spaces, available bikes.", 20, 20);
                 textArea.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH-20, 400));
                 textArea.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+                textArea.setEditable(false);
                 JScrollPane scroll = new JScrollPane(textArea,
                                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -146,6 +147,13 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         {
                 //this.remove(buttonPanel);
                 String gotID;
+                try {
+                        int mouseX = UbikeSystem.getMouseX();
+                        int mouseY = UbikeSystem.getMouseY();
+                }
+                catch (Exception ecp) {
+                        errorLabel.setText("Please Click a postion");
+                }
                 if ("rent".equals(e.getActionCommand()))
                 {
                         System.out.println("Rent button pushed");

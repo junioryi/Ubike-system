@@ -19,6 +19,8 @@ public class UbikeSystem extends JPanel implements ActionListener
 	private static ArrayList<Station> stationList;
 	private static Scanner scanner;
         public static int userNum;
+        private static int mouseX;
+        private static int mouseY;
 
         /**
          * JPanel constructor.
@@ -42,6 +44,17 @@ public class UbikeSystem extends JPanel implements ActionListener
                 //setFocusable(true);
                 //keyController = new KeyController();
                 drawStation();
+
+                this.addMouseListener(new MouseAdapter()
+                {
+                        @Override
+                        public void mouseClicked(MouseEvent e)
+                        {
+                                mouseX = e.getX();
+                                mouseY = e.getY();
+                                System.out.println(mouseX + ", " + mouseY);
+                        }
+                });
         }
 
         void drawStation()
@@ -62,6 +75,14 @@ public class UbikeSystem extends JPanel implements ActionListener
                 super.paintComponent(g);
                 g.drawImage(gui.background, 0, 0, 
                         Constants.CENTER_WIDTH, Constants.HEIGHT, this);
+        }
+        public static int getMouseX() 
+        {
+                return mouseX;
+        }
+        public static int getMouseY()
+        {
+                return mouseY;
         }
         /**
          * Not in use for now.
@@ -438,7 +459,8 @@ public class UbikeSystem extends JPanel implements ActionListener
 	}
 
 	// 輸入使用者座標位置列出最近站點依序排列
-	public static void findNearest(ArrayList<Station> stationList, double x,
+	//public static void findNearest(ArrayList<Station> stationList, double x,
+	public static void findNearest(double x,
 			double y) {
 		ArrayList<Station> rankingList = new ArrayList<Station>(310);
 		rankingList.add(stationList.get(0));
