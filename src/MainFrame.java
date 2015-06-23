@@ -23,6 +23,7 @@ public class MainFrame extends JFrame implements Constants
 
                 eastPanel.setSystem(ubikeSystem);
 
+                this.pack();
                 setTitle("OOP Fianl: Ubike Renting System");
                 setResizable(false);
                 setVisible(true);
