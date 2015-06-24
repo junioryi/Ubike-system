@@ -15,6 +15,7 @@ public class UbikeSystem extends JPanel implements ActionListener
 {
         private GUIResource gui;
         private KeyController keyController;
+        private EastPanel eastPanel;
         private static ArrayList<User> userList;
 	private static ArrayList<Station> stationList;
 	private static Scanner scanner;
@@ -30,6 +31,7 @@ public class UbikeSystem extends JPanel implements ActionListener
          */
         public UbikeSystem(EastPanel eastPanel) throws IOException
         {
+                this.eastPanel = eastPanel;
                 userNum = 0;
 
                 File finID = new File("RFIDCard.txt");
@@ -53,6 +55,7 @@ public class UbikeSystem extends JPanel implements ActionListener
                                 mouseX = e.getX();
                                 mouseY = e.getY();
                                 System.out.println(mouseX + ", " + mouseY);
+                                setMousePosition(mouseX, mouseY);
                         }
                 });
         }
@@ -75,6 +78,17 @@ public class UbikeSystem extends JPanel implements ActionListener
                 super.paintComponent(g);
                 g.drawImage(gui.background, 0, 0, 
                         Constants.CENTER_WIDTH, Constants.HEIGHT, this);
+        }
+        public void setMousePosition(int x, int y)
+        {
+                // Change back to 121.xxxx, 25.xxx
+                double width  = 121.632369 - 121.474561;
+                double height = 25.090168 - 25.001412;
+                double widthScale  = Constants.CENTER_WIDTH/width;
+                double heightScale = Constants.HEIGHT/height;
+                double newX = (x/widthScale) + 121.474561;
+                double newY = (Constants.HEIGHT - y)/heightScale + 25.001412;
+                eastPanel.setMousePosition(newX, newY);
         }
         public static int getMouseX() 
         {
@@ -460,7 +474,7 @@ public class UbikeSystem extends JPanel implements ActionListener
 
 	// 輸入使用者座標位置列出最近站點依序排列
 	//public static void findNearest(ArrayList<Station> stationList, double x,
-	public static void findNearest(double x,
+	public ArrayList<Station> findNearest(double x,
 			double y) {
 		ArrayList<Station> rankingList = new ArrayList<Station>(310);
 		rankingList.add(stationList.get(0));
@@ -474,10 +488,13 @@ public class UbikeSystem extends JPanel implements ActionListener
 			}
 			rankingList.add(stationList.get(i));
 		}
+                return rankingList;
+                /*
 		for (int k = 0; k < rankingList.size(); k++) {
 			System.out.println(rankingList.get(k).getDistance(x, y) + " "
 					+ rankingList.get(k).getName());
 		}
+                */
 	}
 
 	// 列出最多空位數的站點依序排列

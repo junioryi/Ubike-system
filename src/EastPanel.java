@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.border.*;
 import javax.swing.*;
 import java.util.*;
+import java.text.DecimalFormat;
 
 
 public class EastPanel extends JPanel implements Constants, ActionListener
@@ -18,6 +19,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         private JTextArea textArea;
 
         private int userIndex;
+        private double mouseX, mouseY;
         private Station station;
 
         public JTextField inputID;
@@ -36,7 +38,6 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 // Welcom Panel
                 //
                 setLayout(new FlowLayout());
-                // Display project name.
                 JLabel welcome = new JLabel("Ubike System");
                 welcome.setFont(new Font("Verdana", 1, 20));
                 this.add(welcome);
@@ -48,7 +49,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 errorLabel.setForeground(Color.red);
                 this.add(errorLabel);
 
-                // booleans which check user has click a
+                // booleans which check user has click on a
                 // station and login.
                 hasUser = false;
                 hasStation = false;
@@ -88,6 +89,8 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 //
                 // Search Panel
                 //
+                mouseX = -1;
+                mouseY = -1;
                 searchPanel = new JPanel(new BorderLayout());
                 searchPanel.setBorder( new TitledBorder ( new EtchedBorder(), "Search stations"));
                 searchPanel.setSize(Constants.EAST_PANEL_WIDTH, 300);
@@ -114,13 +117,14 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                
                 searchPanel.add(searchButtonPanel, BorderLayout.PAGE_START);
 
-                textArea = new JTextArea("Click the buttons to sort near station by distance,\n available spaces, available bikes.", 20, 20);
-                textArea.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH-20, 400));
+                textArea = new JTextArea("Click the buttons to sort near station by distance,\n available spaces, available bikes.", 13, 20);
+                //textArea.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH-20, 400));
                 textArea.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
                 textArea.setEditable(false);
                 JScrollPane scroll = new JScrollPane(textArea,
                                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                scroll.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH - 20, 250));
                 searchPanel.add(scroll, BorderLayout.CENTER);
 
                 this.add(searchPanel);
@@ -190,15 +194,28 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 else if ("dis search".equals(e.getActionCommand()))
                 {
                         System.out.println("dis search button pushed.");
+                        if (mouseX == -1) {
+                                textArea.setText("please click your position.");
+                        }
+                        else {
+                                ArrayList<Station> rank = ubikeSystem.findNearest(mouseX, mouseY);
+                                displayList(rank);
+                        }
 
                 }
                 else if ("space search".equals(e.getActionCommand()))
                 {
                         System.out.println("space search button pushed.");
+                        if (mouseX == -1) {
+                                textArea.setText("please click your position.");
+                        }
                 }
                 else if ("bikes search".equals(e.getActionCommand()))
                 {
                         System.out.println("bikes search button pushed.");
+                        if (mouseX == -1) {
+                                textArea.setText("please click your position.");
+                        }
                 }
 
 
@@ -229,6 +246,8 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 // East panel record the station user chose.
                 this.station = station;
 
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(4);
                 /*
                 stationPanel = new JPanel();
                 stationPanel.setLayout(new BoxLayout(stationPanel,
@@ -237,13 +256,17 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 String name = station.getName();
                 int capacity = station.getCapacity();
                 int available = station.getAvailable();
+                double x = station.getX();
+                double y = station.getY();
 
                 JLabel stationName = new JLabel(name);
                 JLabel stationCap  = new JLabel("Park spaces: " + capacity);
                 JLabel stationAva  = new JLabel("Available bikes: " + available);
+                JLabel position = new JLabel("Position: " + df.format(x) + ", " + df.format(y));
                 stationPanel.add(stationName);
                 stationPanel.add(stationCap);
                 stationPanel.add(stationAva);
+                stationPanel.add(position);
                 //this.remove(buttonPanel);
                 //this.add(stationPanel);
                 //this.add(buttonPanel);
@@ -265,7 +288,27 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 hasStation = false;
                 this.revalidate();
                 this.repaint();
-
+        }
+        public void setMousePosition(double x, double y)
+        {                
+                mouseX = x;
+                mouseY = y;
+                textArea.setText("You're at\n x =" + x + "\n y = " + y);
+        }
+        public void displayList(ArrayList<Station> rank)
+        {
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                String display = "";
+                System.out.println("mouse at : " + mouseX + ", " + mouseY);
+                display += "Mouse at (" + mouseX + ", " + mouseY + ")";
+                for (Station s : rank) {
+                        display += s.getName();
+                        display += " (" + s.getX() + "," + s.getY() + ")";
+                        display += ", dis = " + df.format(s.getDistance(mouseX, mouseY));
+                        display += "\n";
+                }
+                textArea.setText(display);
         }
                 
         private class UserPanel extends JPanel implements ActionListener 
