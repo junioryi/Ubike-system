@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Date;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,6 +85,7 @@ public class UbikeSystem extends JPanel implements ActionListener
         {
 
                 eastPanel.setMousePosition(x, y);
+                /*
 
                 // Change back to 121.xxxx, 25.xxx
                 double width  = 121.632369 - 121.474561;
@@ -95,14 +97,8 @@ public class UbikeSystem extends JPanel implements ActionListener
                 double newX = (x - 121.474561) * widthScale;
                 double newY = Constants.HEIGHT - (y - 25.001412) * heightScale;
                 //eastPanel.setMousePosition(newX, newY);
-        }
-        public static int getMouseX() 
-        {
-                return mouseX;
-        }
-        public static int getMouseY()
-        {
-                return mouseY;
+                //
+                */
         }
         public void userDeposit(int userIndex, int money)
         {
@@ -249,6 +245,15 @@ public class UbikeSystem extends JPanel implements ActionListener
         {
                 return userNum;
         }
+        public static int getMouseX() 
+        {
+                return mouseX;
+        }
+        public static int getMouseY()
+        {
+                return mouseY;
+        }
+
         /**
          * Create a new user.
          *
@@ -340,6 +345,8 @@ public class UbikeSystem extends JPanel implements ActionListener
                         return Constants.NO_BIKE;
                 }
                 else {
+                        Date date = new Date();
+                        user.setRentDate(date);
                         user.setRenttime(System.currentTimeMillis());
 			user.isused = true;
 			user.setRentstation(station);
@@ -404,8 +411,16 @@ public class UbikeSystem extends JPanel implements ActionListener
 			int charge;
 			user.setReturntime(System.currentTimeMillis());
                         user.setReturnStation(station);
-			long deltatime = (System.currentTimeMillis() - user.getRenttime()) / 1000 / 60;
-			user.setTotalTime(user.getTotalTime() + deltatime);
+			double deltatime = (System.currentTimeMillis() - user.getRenttime()) / 1000.0 / 60.0;
+
+                        
+
+                        System.out.println("total tiem: " + deltatime);
+                        System.out.println("" + System.currentTimeMillis() + ", " + System.currentTimeMillis());
+                        //user.setTotalTime(user.getTotalTime() + deltatime);
+			user.setTotalTime(deltatime);
+                        Date date = new Date();
+                        user.setReturnDate(date);
 			if (deltatime < 30) {// 30分鐘內
 				charge = 5;
 			} else if (deltatime < 240) {// 4小時內
@@ -429,6 +444,7 @@ public class UbikeSystem extends JPanel implements ActionListener
 			}
 			user.setValue(user.getValue() - charge);
 			user.setTotalTime(user.getTotalTime()+deltatime);
+                        user.setCharge(charge);
 			user.isused = false;
 			station.setCapacity(station.getCapacity()-1);
 			station.setAvailable(station.getAvailable()+1);
@@ -484,16 +500,19 @@ public class UbikeSystem extends JPanel implements ActionListener
 
 	// 輸入使用者座標位置列出最近站點依序排列
 	//public static void findNearest(ArrayList<Station> stationList, double x,
-	public LinkedList<Station> findNearest(double x, double y) {
+	public LinkedList<Station> findNearest(double x, double y, int restrict) {
                 LinkedList<Station> rank = new LinkedList<Station>();
+                int res = (restrict == -1) ? 10000000 : restrict;
 
                 for (Station s : stationList) {
+                        // If the distance is too far.
+                        if (s.getDistance(x, y) > res) continue;
+
                         boolean added = false;
                         if (rank.size() == 0) {
                                 rank.add(s);
                                 added = true;
                         }
-
                         for (int index = 0; index < rank.size(); ++index) {
                                 if (s.getDistance(x, y) < rank.get(index).getDistance(x, y)) {
                                         rank.add(index, s);
@@ -509,10 +528,13 @@ public class UbikeSystem extends JPanel implements ActionListener
 	}
 
 	// 列出最多空位數的站點依序排列
-	public static LinkedList<Station> orderBySpace() {
+	public static LinkedList<Station> orderBySpace(double x, double y, int restrict) {
                 LinkedList<Station> rank = new LinkedList<Station>();
+                int res = (restrict == -1) ? 10000000 : restrict;
 
                 for (Station s : stationList) {
+                        if (s.getDistance(x, y) > res) continue;
+                        
                         boolean added = false;
                         if (rank.size() == 0) {
                                 rank.add(s);
@@ -520,7 +542,7 @@ public class UbikeSystem extends JPanel implements ActionListener
                         }
 
                         for (int index = 0; index < rank.size(); ++index) {
-                                if (s.getCapacity() < rank.get(index).getCapacity()) {
+                                if (s.getCapacity() > rank.get(index).getCapacity()) {
                                         rank.add(index, s);
                                         added = true;
                                         break;
@@ -533,10 +555,12 @@ public class UbikeSystem extends JPanel implements ActionListener
                 return rank;
         }
 	// 列出最多車輛數的站點依序排列
-	public static LinkedList<Station> orderByBike() {
+	public static LinkedList<Station> orderByBike(double x, double y, int restrict) {
                 LinkedList<Station> rank = new LinkedList<Station>();
+                int res = (restrict == -1) ? 10000000 : restrict;
 
                 for (Station s : stationList) {
+                        if (s.getDistance(x, y) > res) continue;
                         boolean added = false;
                         if (rank.size() == 0) {
                                 rank.add(s);

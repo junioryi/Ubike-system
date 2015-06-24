@@ -1,4 +1,4 @@
-
+import java.util.Date;
 public class User {
         private int index;
 	private long userID;
@@ -9,8 +9,12 @@ public class User {
         private Station returnStation;
 	private long returntime;
 	public boolean isused=false;
-    	private long totalTime;	//unit:min
+    	private double totalTime;	//unit:min
 	private int times;
+        private int charge;
+
+        private Date rentDate;
+        private Date returnDate;
 
 
 	public User(int index, long userID,String strID)
@@ -22,9 +26,29 @@ public class User {
                 this.renttime   = 0;
                 this.returntime = 0;
                 this.totalTime  = 0;
+                this.charge     = 0;
                 this.rentstation = null;
                 this.returnStation = null;
 	}
+
+        public void setRentDate(Date date) {
+                this.rentDate = date;
+        }
+        public Date getRentDate() {
+                return rentDate;
+        }
+        public void setReturnDate(Date date) {
+                this.returnDate = date;
+        }
+        public Date getReturnDate() {
+                return returnDate;
+        }
+        public void setCharge(int charge) {
+                this.charge = charge;
+        }
+        public int getCharge() {
+                return charge;
+        }
 
         public int getIndex() {
                 return index;
@@ -90,11 +114,11 @@ public class User {
                 this.returnStation = station;
         }
 
-	public long getTotalTime() {
+	public double getTotalTime() {
 		return totalTime;
 	}
 
-	public void setTotalTime(long totalTime) {
+	public void setTotalTime(double totalTime) {
 		this.totalTime = totalTime;
 	}
 

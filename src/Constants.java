@@ -4,7 +4,7 @@ public interface Constants
         static final int HEIGHT = 750;
         static final int CENTER_WIDTH = 1000;
         static final int EAST_PANEL_WIDTH = 250;
-        static final int USER_HEIGHT = 150;
+        static final int USER_HEIGHT = 180;
 
         // Renting info
         static final int NOT_ENOUGH   = 1;

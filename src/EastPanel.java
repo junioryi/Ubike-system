@@ -6,6 +6,8 @@ import javax.swing.border.*;
 import javax.swing.*;
 import java.util.*;
 import java.text.DecimalFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 
 public class EastPanel extends JPanel implements Constants, ActionListener
@@ -19,10 +21,12 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         private JTextArea textArea;
 
         private int userIndex;
+        private int restrict;
         private double mouseX, mouseY;
         private Station station;
 
         public JTextField inputID;
+        public JTextField searchDis;
         private boolean hasUser;
         private boolean hasStation;
 
@@ -97,6 +101,10 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 JPanel searchButtonPanel = new JPanel(new GridLayout(1, 3));
                 searchButtonPanel.setSize(100, 100);
                 
+                searchDis = new JTextField("Distance");
+                searchDis.setMaximumSize( new Dimension(200, 25) );
+                searchPanel.add(searchDis, BorderLayout.SOUTH);
+
                 // Search by distance.
                 JButton disButton = new JButton("Dis");
                 disButton.setSize(20, 20);
@@ -124,7 +132,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 JScrollPane scroll = new JScrollPane(textArea,
                                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                scroll.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH - 20, 250));
+                scroll.setPreferredSize(new Dimension(Constants.EAST_PANEL_WIDTH - 20, 220));
                 searchPanel.add(scroll, BorderLayout.CENTER);
 
                 this.add(searchPanel);
@@ -152,11 +160,20 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 //this.remove(buttonPanel);
                 String gotID;
                 try {
-                        int mouseX = UbikeSystem.getMouseX();
-                        int mouseY = UbikeSystem.getMouseY();
+                        // Mouse click the position.                        
+                        mouseX = UbikeSystem.getMouseX();
+                        mouseY = UbikeSystem.getMouseY();
                 }
                 catch (Exception ecp) {
                         errorLabel.setText("Please Click a postion");
+                }
+                
+                try {
+                        // If user specify the distance restriction.
+                        restrict = Integer.parseInt(searchDis.getText());
+                }
+                catch (Exception ecp) {
+                        restrict = -1;
                 }
                 if ("rent".equals(e.getActionCommand()))
                 {
@@ -191,6 +208,11 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                         userPanel.displayUserInfo(userIndex);
                         }
                 }
+                else if (mouseX == -1) {
+                        // don't sort 
+                        return;
+                }
+                        
                 else if ("dis search".equals(e.getActionCommand()))
                 {
                         if (mouseX == -1) {
@@ -199,20 +221,20 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         }
                         else {
                                 System.out.println("dis search button pushed.");
-                                LinkedList<Station> rank = ubikeSystem.findNearest(mouseX, mouseY);
+                                LinkedList<Station> rank = ubikeSystem.findNearest(mouseX, mouseY, restrict);
                                 displayList(rank, 0);
                         }
                 }
                 else if ("space search".equals(e.getActionCommand()))
                 {
                         System.out.println("space search button pushed.");
-                        LinkedList<Station> rank = ubikeSystem.orderBySpace();
+                        LinkedList<Station> rank = ubikeSystem.orderBySpace(mouseX, mouseY, restrict);
                         displayList(rank, 1);
                 }
                 else if ("bikes search".equals(e.getActionCommand()))
                 {
                         System.out.println("bikes search button pushed.");
-                        LinkedList<Station> rank = ubikeSystem.orderByBike();
+                        LinkedList<Station> rank = ubikeSystem.orderByBike(mouseX, mouseY, restrict);
                         displayList(rank, 2);
                 }
 
@@ -252,20 +274,27 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                             BoxLayout.Y_AXIS));
                 */
                 String name = station.getName();
+                String location = station.getAddress();
                 int capacity = station.getCapacity();
                 int available = station.getAvailable();
                 double x = station.getX();
                 double y = station.getY();
+                mouseX = station.getGUIx();
+                mouseY = station.getGUIy();
                 //double x = station.getGUIx();
                 //double y = station.getGUIy();
 
-                JLabel stationName = new JLabel(name);
+                JLabel stationIdx  = new JLabel("Index: " + station.getIndex());
+                JLabel stationName = new JLabel("Name : " + name);
                 JLabel stationCap  = new JLabel("Park spaces: " + capacity);
                 JLabel stationAva  = new JLabel("Available bikes: " + available);
+                JLabel stationPos  = new JLabel("At: " + location);
                 JLabel position = new JLabel("Position: " + df.format(x) + ", " + df.format(y));
+                stationPanel.add(stationIdx);
                 stationPanel.add(stationName);
                 stationPanel.add(stationCap);
                 stationPanel.add(stationAva);
+                stationPanel.add(stationPos);
                 stationPanel.add(position);
                 //this.remove(buttonPanel);
                 //this.add(stationPanel);
@@ -434,14 +463,6 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         EastPanel.this.repaint();
 
                 }
-                /*
-                public void createUser() 
-                {
-                        int id = ubikeSystem.createUser();
-                        userIndex = id;
-                        displayUserInfo(id);
-                }
-                */
                 public void displayUserInfo(int index)
                 {
                         this.removeAll();
@@ -449,13 +470,17 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         boolean status  = user.getStatus();
                         long rentTime   = user.getRenttime();
                         long returnTime = user.getReturntime();
-                        long totalTime  = user.getTotalTime();
+                        double totalTime  = user.getTotalTime() * 60;
+                        int charge      = user.getCharge();
                         JLabel indexLabel  = new JLabel("Hi, user no." + index);
                         JLabel stateLabel  = new JLabel("Is renting: " + status);
                         JLabel momeyLabel  = new JLabel("Money: " + user.getValue());
-                        JLabel startTime   = new JLabel("Rent time: " + rentTime);
+                        //JLabel startTime   = new JLabel("Rent time: " + rentTime);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        JLabel startTime   = new JLabel("Rent time: ");
                         JLabel returnLabel = new JLabel("Last return: " + returnTime);
-                        JLabel totalLabel  = new JLabel("Total time: " + totalTime);
+                        JLabel totalLabel  = new JLabel("Last rent time: " + totalTime + "s");
+                        JLabel chargeLabel = new JLabel("Last charge: " + charge);
                         JLabel rentStation = new JLabel("");
                       
                         this.add(indexLabel);
@@ -465,6 +490,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 this.add(startTime);
                                 String stationName = user.getRentStation().toString();
                                 rentStation.setText("Rent station: " + stationName);
+                                startTime.setText("Rent time: " + dateFormat.format(user.getRentDate()));
                                 this.add(totalLabel);
                                 this.add(rentStation);
                         }
@@ -473,6 +499,8 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 String stationName = user.getReturnStation().toString();
                                 returnLabel.setText("Last Return: " + stationName);
                                 this.add(returnLabel);
+                                this.add(totalLabel);
+                                this.add(chargeLabel);
                         }
                         this.add(reloginButton);
 
