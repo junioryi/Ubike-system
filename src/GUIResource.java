@@ -132,6 +132,8 @@ public class GUIResource
                         this.x = (modifyX < Constants.CENTER_WIDTH) ? (int)modifyX : -100;
                         this.y = (modifyY < Constants.HEIGHT) ? (int)modifyY : -100;
 
+                        station.setGUIpos(this.x ,this.y);
+
                         this.ii = ii;
                         //setBounds(x, y, 10, 10);
                         //setIcon(ii);

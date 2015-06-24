@@ -193,29 +193,27 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 }
                 else if ("dis search".equals(e.getActionCommand()))
                 {
-                        System.out.println("dis search button pushed.");
                         if (mouseX == -1) {
-                                textArea.setText("please click your position.");
+                                // If user didn't click a position, sort cannot be done.
+                                textArea.setText("Pleast click your position.");
                         }
                         else {
-                                ArrayList<Station> rank = ubikeSystem.findNearest(mouseX, mouseY);
-                                displayList(rank);
+                                System.out.println("dis search button pushed.");
+                                LinkedList<Station> rank = ubikeSystem.findNearest(mouseX, mouseY);
+                                displayList(rank, 0);
                         }
-
                 }
                 else if ("space search".equals(e.getActionCommand()))
                 {
                         System.out.println("space search button pushed.");
-                        if (mouseX == -1) {
-                                textArea.setText("please click your position.");
-                        }
+                        LinkedList<Station> rank = ubikeSystem.orderBySpace();
+                        displayList(rank, 1);
                 }
                 else if ("bikes search".equals(e.getActionCommand()))
                 {
                         System.out.println("bikes search button pushed.");
-                        if (mouseX == -1) {
-                                textArea.setText("please click your position.");
-                        }
+                        LinkedList<Station> rank = ubikeSystem.orderByBike();
+                        displayList(rank, 2);
                 }
 
 
@@ -258,6 +256,8 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 int available = station.getAvailable();
                 double x = station.getX();
                 double y = station.getY();
+                //double x = station.getGUIx();
+                //double y = station.getGUIy();
 
                 JLabel stationName = new JLabel(name);
                 JLabel stationCap  = new JLabel("Park spaces: " + capacity);
@@ -289,23 +289,34 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                 this.revalidate();
                 this.repaint();
         }
-        public void setMousePosition(double x, double y)
+        public void setMousePosition(int x, int y)
         {                
-                mouseX = x;
-                mouseY = y;
+                mouseX = 1.0*x;
+                mouseY = 1.0*y;
                 textArea.setText("You're at\n x =" + x + "\n y = " + y);
         }
-        public void displayList(ArrayList<Station> rank)
+        public void displayList(LinkedList<Station> rank, int which)
         {
                 DecimalFormat df = new DecimalFormat();
                 df.setMaximumFractionDigits(2);
                 String display = "";
-                System.out.println("mouse at : " + mouseX + ", " + mouseY);
-                display += "Mouse at (" + mouseX + ", " + mouseY + ")";
+                //System.out.println("mouse at : " + mouseX + ", " + mouseY);
+                //display += "Mouse at (" + mouseX + ", " + mouseY + ")";
                 for (Station s : rank) {
                         display += s.getName();
-                        display += " (" + s.getX() + "," + s.getY() + ")";
-                        display += ", dis = " + df.format(s.getDistance(mouseX, mouseY));
+                        switch (which) {
+                                case(0):
+                                        display += ", dis = " + df.format(s.getDistance(mouseX, mouseY));
+                                        break;
+                                case(1):
+                                        // sort by space
+                                        display += ", space = " + s.getCapacity();
+                                        break;
+                                case(2):
+                                        // sort by bikes
+                                        display += ", bikes = " + s.getAvailable();
+                                        break;
+                        }
                         display += "\n";
                 }
                 textArea.setText(display);

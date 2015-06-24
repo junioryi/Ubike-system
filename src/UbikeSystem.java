@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -81,14 +82,19 @@ public class UbikeSystem extends JPanel implements ActionListener
         }
         public void setMousePosition(int x, int y)
         {
+
+                eastPanel.setMousePosition(x, y);
+
                 // Change back to 121.xxxx, 25.xxx
                 double width  = 121.632369 - 121.474561;
                 double height = 25.090168 - 25.001412;
                 double widthScale  = Constants.CENTER_WIDTH/width;
                 double heightScale = Constants.HEIGHT/height;
-                double newX = (x/widthScale) + 121.474561;
-                double newY = (Constants.HEIGHT - y)/heightScale + 25.001412;
-                eastPanel.setMousePosition(newX, newY);
+                //double newX = (x/widthScale) + 121.474561;
+                //double newY = (Constants.HEIGHT - y)/heightScale + 25.001412;
+                double newX = (x - 121.474561) * widthScale;
+                double newY = Constants.HEIGHT - (y - 25.001412) * heightScale;
+                //eastPanel.setMousePosition(newX, newY);
         }
         public static int getMouseX() 
         {
@@ -474,69 +480,78 @@ public class UbikeSystem extends JPanel implements ActionListener
 
 	// 輸入使用者座標位置列出最近站點依序排列
 	//public static void findNearest(ArrayList<Station> stationList, double x,
-	public ArrayList<Station> findNearest(double x,
-			double y) {
-		ArrayList<Station> rankingList = new ArrayList<Station>(310);
-		rankingList.add(stationList.get(0));
-		for (int i = 1; i < stationList.size(); i++) {
-			for (int j = 0; j < rankingList.size(); j++) {
-				if (stationList.get(i).getDistance(x, y) < rankingList.get(j)
-						.getDistance(x, y)) {
-					rankingList.add(j, stationList.get(i));
-					break;
-				}
-			}
-			rankingList.add(stationList.get(i));
-		}
-                return rankingList;
-                /*
-		for (int k = 0; k < rankingList.size(); k++) {
-			System.out.println(rankingList.get(k).getDistance(x, y) + " "
-					+ rankingList.get(k).getName());
-		}
-                */
+	public LinkedList<Station> findNearest(double x, double y) {
+                LinkedList<Station> rank = new LinkedList<Station>();
+
+                for (Station s : stationList) {
+                        boolean added = false;
+                        if (rank.size() == 0) {
+                                rank.add(s);
+                                added = true;
+                        }
+
+                        for (int index = 0; index < rank.size(); ++index) {
+                                if (s.getDistance(x, y) < rank.get(index).getDistance(x, y)) {
+                                        rank.add(index, s);
+                                        added = true;
+                                        break;
+                                }
+                        }
+                        if (!added) {
+                                rank.add(s);
+                        }
+                }
+                return rank;
 	}
 
 	// 列出最多空位數的站點依序排列
-	public static void orderBySpace(ArrayList<Station> stationList) {
-		ArrayList<Station> rankingList = new ArrayList<Station>(310);
-		rankingList.add(stationList.get(0));
-		for (int i = 1; i < stationList.size(); i++) {
-			for (int j = 0; j < rankingList.size(); j++) {
-				if (stationList.get(i).getCapacity() > rankingList.get(j)
-						.getCapacity()) {
-					rankingList.add(j, stationList.get(i));
-					break;
-				}
-			}
-			rankingList.add(stationList.get(i));
-		}
-		for (int k = 0; k < rankingList.size(); k++) {
-			System.out.println(rankingList.get(k).getCapacity() + " "
-					+ rankingList.get(k).getName());
-		}
-	}
+	public static LinkedList<Station> orderBySpace() {
+                LinkedList<Station> rank = new LinkedList<Station>();
 
+                for (Station s : stationList) {
+                        boolean added = false;
+                        if (rank.size() == 0) {
+                                rank.add(s);
+                                added = true;
+                        }
+
+                        for (int index = 0; index < rank.size(); ++index) {
+                                if (s.getCapacity() < rank.get(index).getCapacity()) {
+                                        rank.add(index, s);
+                                        added = true;
+                                        break;
+                                }
+                        }
+                        if (!added) {
+                                rank.add(s);
+                        }
+                }
+                return rank;
+        }
 	// 列出最多車輛數的站點依序排列
-	public static void orderByBike(ArrayList<Station> stationList) {
-		ArrayList<Station> rankingList = new ArrayList<Station>(310);
-		rankingList.add(stationList.get(0));
-		for (int i = 1; i < stationList.size(); i++) {
-			for (int j = 0; j < rankingList.size(); j++) {
-				if (stationList.get(i).getAvailable() > rankingList.get(j)
-						.getAvailable()) {
-					rankingList.add(j, stationList.get(i));
-					break;
-				}
-			}
-			rankingList.add(stationList.get(i));
-		}
-		for (int k = 0; k < rankingList.size(); k++) {
-			System.out.println(rankingList.get(k).getAvailable() + " "
-					+ rankingList.get(k).getName());
-		}
+	public static LinkedList<Station> orderByBike() {
+                LinkedList<Station> rank = new LinkedList<Station>();
 
-	}
+                for (Station s : stationList) {
+                        boolean added = false;
+                        if (rank.size() == 0) {
+                                rank.add(s);
+                                added = true;
+                        }
+
+                        for (int index = 0; index < rank.size(); ++index) {
+                                if (s.getAvailable() > rank.get(index).getAvailable()) {
+                                        rank.add(index, s);
+                                        added = true;
+                                        break;
+                                }
+                        }
+                        if (!added) {
+                                rank.add(s);
+                        }
+                }
+                return rank;
+        }
 
 	public static void getUsedUser(ArrayList<User> userList) {
 		for (int i = 0; i < userList.size(); i++) {

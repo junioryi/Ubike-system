@@ -4,6 +4,7 @@ public class Station
     private String name;
     private double locationX;
     private double locationY;
+    private double guiX, guiY;
     private int capacity;
     private int available;
     private String address;
@@ -51,6 +52,20 @@ public class Station
     {
         return address;
     }   
+    public void setGUIpos(int x, int y)
+    {
+        this.guiX = x;
+        this.guiY = y;
+    }
+    public double getGUIx() 
+    {
+        return guiX;
+    }
+    public double getGUIy()
+    {
+        return guiY;
+    }
+
     public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
@@ -65,8 +80,10 @@ public class Station
         return name;
     }
     public double getDistance(double x, double y){
-        double x2 = Math.pow(x-locationX, 2);
-        double y2 = Math.pow(y-locationY, 2);
+        //double x2 = Math.pow(x-locationX, 2);
+        //double y2 = Math.pow(y-locationY, 2);
+        double x2 = Math.pow(x-guiX, 2);
+        double y2 = Math.pow(y-guiY, 2);
         return Math.sqrt(x2+y2);
     }
 
