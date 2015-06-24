@@ -104,6 +104,10 @@ public class UbikeSystem extends JPanel implements ActionListener
         {
                 return mouseY;
         }
+        public void userDeposit(int userIndex, int money)
+        {
+                userList.get(userIndex).deposit(money);
+        }
         /**
          * Not in use for now.
          */

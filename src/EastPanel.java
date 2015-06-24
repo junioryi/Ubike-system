@@ -275,13 +275,14 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         }
         public void relogin() 
         {
-                this.remove(userPanel);
-                this.remove(buttonPanel);
-                if (stationPanel != null) {
-                        this.remove(stationPanel);
-                }
+                //this.remove(userPanel);
                 userPanel = new UserPanel(this);
-                this.add(userPanel);
+                //this.remove(buttonPanel);
+                //if (stationPanel != null) {
+                //        this.remove(stationPanel);
+                //}
+                //userPanel = new UserPanel(this);
+                //this.add(userPanel);
                 userIndex = -1;
                 station = null;
                 hasUser = false;
@@ -325,10 +326,13 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         private class UserPanel extends JPanel implements ActionListener 
         {
                 public EastPanel eastPanel;
+                public JPanel userButtonPanel;
                 public JButton addUserButton;
                 public JButton oldUserButton;
                 public JButton reloginButton;
+                public JButton depositButton;
                 public JTextField inputID;
+                public JTextField moneyInput;
 
                 public UserPanel(EastPanel eastPanel) {
                         // connect to east panel.
@@ -362,6 +366,11 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                         reloginButton = new JButton("Relogin");
                         reloginButton.setActionCommand("relogin");
                         reloginButton.addActionListener(this);
+
+                        // Deposit button.
+                        depositButton = new JButton("Deposit");
+                        depositButton.setActionCommand("deposit");
+                        depositButton.addActionListener(this);
                 }
                 public void actionPerformed(ActionEvent e)
                 {
@@ -404,6 +413,21 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 this.add(oldUserButton);
                                 this.add(addUserButton);
                                 eastPanel.relogin();
+                        }
+                        else if ("deposit".equals(e.getActionCommand()))
+                        {
+                                System.out.println("Deposit button pushed.");
+                                try {
+                                        int money = Integer.parseInt(moneyInput.getText());
+                                        ubikeSystem.userDeposit(userIndex, money);
+                                        displayUserInfo(userIndex);
+                                }
+                                catch (Exception excp) {
+                                        excp.printStackTrace();
+                                        System.out.println("Deposit money exception.");
+                                        errorLabel.setText("Please input correct money.");
+                                }
+
                         }
 
                         EastPanel.this.revalidate();
@@ -451,6 +475,12 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                 this.add(returnLabel);
                         }
                         this.add(reloginButton);
+
+                        moneyInput = new JTextField("How much?");
+                        moneyInput.setMaximumSize( new Dimension(200, 25) );
+
+                        this.add(moneyInput);
+                        this.add(depositButton);
                         this.updateUI();
                 }
         }

@@ -54,6 +54,10 @@ public class User {
 		this.value = value;
 	}
 
+        public void deposit(int money) {
+                this.value += money;
+        }
+
 	public long getRenttime() {
 		return renttime;
 	}
