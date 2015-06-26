@@ -191,6 +191,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                         break;
                                 case(RENT_SUCCESS):
                                         userPanel.displayUserInfo(userIndex);
+                                        displayStation(station);
                         }
                 }
                 else if ("return".equals(e.getActionCommand()))
@@ -206,6 +207,7 @@ public class EastPanel extends JPanel implements Constants, ActionListener
                                         break;
                                 case (RETURN_SUCCESS):
                                         userPanel.displayUserInfo(userIndex);
+                                        displayStation(station);
                         }
                 }
                 else if (mouseX == -1) {
@@ -304,8 +306,16 @@ public class EastPanel extends JPanel implements Constants, ActionListener
         }
         public void relogin() 
         {
+                this.remove(userPanel);
+                this.remove(buttonPanel);
+                this.remove(stationPanel);
+                this.remove(searchPanel);
                 //this.remove(userPanel);
                 userPanel = new UserPanel(this);
+                this.add(userPanel);
+                this.add(stationPanel);
+                this.add(buttonPanel);
+                this.add(searchPanel);
                 //this.remove(buttonPanel);
                 //if (stationPanel != null) {
                 //        this.remove(stationPanel);
